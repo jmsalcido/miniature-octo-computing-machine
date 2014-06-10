@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">AT3-ActivityLifeCycle</string>
+    <string name="lifecycle">be water</string>
+    <string name="created">Times created:</string>
+    <string name="started">Times started:</string>
+    <string name="resumed">Times resumed:</string>
+    <string name="paused">Times paused:</string>
+    <string name="stopped">Times stopped:</string>
+    <string name="restarted">Times restarted:</string>
+    <string name="destroyed">Times destroyed:</string>
+
+</resources>

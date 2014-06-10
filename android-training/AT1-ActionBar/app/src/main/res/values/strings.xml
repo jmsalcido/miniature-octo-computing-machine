@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">AT1-ActionBar</string>
+    <string name="action_settings">Settings</string>
+    <string name="activity_child_text">Please return to home screen</string>
+    <string name="action_search">Search!</string>
+    <string name="button_text">Hello, click me</string>
+
+</resources>
