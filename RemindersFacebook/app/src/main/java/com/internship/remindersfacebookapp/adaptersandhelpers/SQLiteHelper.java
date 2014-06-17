@@ -98,9 +98,9 @@ public class SQLiteHelper extends SQLiteOpenHelper{
 		if(c.moveToFirst()){
 			do{
 				Log.w(TAG, c.getString(0)+
-						"|"+c.getString(1)+
-						"|"+c.getString(2)+
-						"|"+c.getString(3));
+						"/"+c.getString(1)+
+						"/"+c.getString(2)+
+						"/"+c.getString(3));
 			}while(c.moveToNext());
 		}
 		c.close();
@@ -118,7 +118,7 @@ public class SQLiteHelper extends SQLiteOpenHelper{
 				reminder.setUserId(c.getString(3));
 				reminder.setState(c.getString(4));
 				//Do something Here with values
-				Log.w(TAG, reminder.getContent());
+				Log.w(TAG, reminder.getContent()+"/"+reminder.getDate());
 				reminderList.add(reminder);
 			}while(c.moveToNext());
 		}else{

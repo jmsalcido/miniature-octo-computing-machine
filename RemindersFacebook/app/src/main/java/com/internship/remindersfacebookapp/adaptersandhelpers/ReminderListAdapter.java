@@ -23,17 +23,17 @@ private Context mContext;
 
 	@Override
 	public int getCount() {
-		return 0;
+		return reminderList.size();
 	}
 
 	@Override
 	public Object getItem(int position) {
-		return null;
+		return reminderList.get(position);
 	}
 
 	@Override
 	public long getItemId(int position) {
-		return 0;
+		return position;
 	}
 
 	@Override

@@ -26,7 +26,7 @@ private FacebookUser mFacebookUser;
     public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.reminders_fragments, container, false);
 	    TextView remindersHeader = (TextView) view.findViewById(R.id.profile_name);
-	    SQLiteHelper db = new SQLiteHelper(getActivity().getApplicationContext());
+	    SQLiteHelper db = new SQLiteHelper(view.getContext());
 	    Bundle extras = getActivity().getIntent().getExtras();
 	    mFacebookUser = new FacebookUser(
 			    extras.getString(FacebookUser.USERNAME),

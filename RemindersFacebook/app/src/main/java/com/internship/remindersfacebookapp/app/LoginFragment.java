@@ -84,7 +84,6 @@ public class LoginFragment extends Fragment {
 	}
 
 	private void onSessionStateChange(Session session, SessionState state, Exception exception) {
-		Intent viewPagerIntent;
 		Log.i(TAG, "Logged in...");
 		if (state.isOpened()) {
 			Request.newMeRequest(session, new Request.GraphUserCallback() {
@@ -92,9 +91,6 @@ public class LoginFragment extends Fragment {
 				@Override
 				public void onCompleted(GraphUser user, Response response) {
 					if (user != null) {
-						/*Profile.mImage=user.getId();
-						Profile.mName=user.getName();
-						Profile.mMail=user.getProperty("email").toString();*/
 						mFacebookUser=new FacebookUser(
 								user.getName(),
 								user.getProperty("email").toString(),
