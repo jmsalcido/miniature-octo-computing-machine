@@ -4,13 +4,17 @@ public class Reminder {
 	private String mContent;
 	private String mDate;
 	private String mUserId;
-	private String mState;
+	private int mState;
 
-	public Reminder(){
+    public int getState() {
+        return mState;
+    }
 
-	}
+    public void setState(int state) {
+        mState = state;
+    }
 
-	public String getContent() {
+    public String getContent() {
 		return mContent;
 	}
 
@@ -34,11 +38,4 @@ public class Reminder {
 		mUserId=userId;
 	}
 
-	public String getState() {
-		return mState;
-	}
-
-	public void setState(String state) {
-		mState=state;
-	}
 }

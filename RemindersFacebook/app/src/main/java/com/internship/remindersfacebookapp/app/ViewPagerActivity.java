@@ -76,8 +76,8 @@ public class ViewPagerActivity extends FragmentActivity{
         List<Fragment> fragmentList = new ArrayList<Fragment>();
 
         fragmentList.add(ProfileFragment.newInstance());
-        fragmentList.add(RemindersFragment.newInstance("Active reminders"));
-        fragmentList.add(RemindersFragment.newInstance("Expired reminders"));
+        fragmentList.add(RemindersActiveFragment.newInstance());
+        fragmentList.add(RemindersExpiredFragment.newInstance());
 
         return fragmentList;
     }

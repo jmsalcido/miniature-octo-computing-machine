@@ -14,51 +14,68 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SQLiteHelper extends SQLiteOpenHelper{
+    //Constant and variables declaration
 	private static final String TAG = "SQL";
 	private static final int DATABASE_VERSION=1;
 	private static String DATABASE_NAME="FacebookReminderDB";
 
-	public SQLiteHelper(Context context){
+    //Table for users name
+    private static final String TABLE_FACEBOOK_USERS = "facebook_users";
+    //Table for users columns
+    private static final String COLUMN_FACEBOOK_USER_ID = "user_id";
+    private static final String COLUMN_IMAGE_ID= "image";
+    private static final String COLUMN_NAME= "name";
+    private static final String COLUMN_MAIL = "mail";
+
+    //Table for reminders name
+    private static final String TABLE_REMINDERS = "reminders";
+    //Table for reminders columns
+    private static final String COLUMN_CONTENT = "content";
+    private static final String COLUMN_DATE = "date";
+    private static final String COLUMN_USER_ID = "user_id";
+    //state 0 is for inactive and 1 is for inactive.
+    private static final String COLUMN_STATE = "state";
+
+    //Strings for demo header
+    private static final String EXAMPLE_CONTENT = "Example content";
+    private static final String EXAMPLE_DATE = "26 June 2014";
+
+    //Querys for table creation
+    private static final String CREATE_TABLE_REMINDERS_IF_NOT_EXISTS =
+            "CREATE TABLE IF NOT EXISTS reminders("+
+                    "id INTEGER PRIMARY KEY AUTOINCREMENT, "+
+                    "content TEXT, "+
+                    "date TEXT, "+
+                    "user_id TEXT,"+
+                    "state INTEGER,"+
+                    "FOREIGN KEY(user_id) REFERENCES facebook_users(user_id))";
+
+    private static final String CREATE_TABLE_FACEBOOK_USER_IF_NOT_EXISTS =
+            "CREATE TABLE IF NOT EXISTS facebook_users("+
+                    "user_id INTEGER PRIMARY KEY AUTOINCREMENT,"+
+                    "image TEXT,"+
+                    "name TEXT,"+
+                    "mail TEXT)";
+
+    /*
+     * End of variable and constants declaration.
+     */
+    public SQLiteHelper(Context context){
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
 	}
 
 	@Override
 	public void onCreate(SQLiteDatabase db) {
 		Log.w(TAG, db.getPath());
-		String CREATE_TABLE_REMINDERS_IF_NOT_EXISTS =
-				"CREATE TABLE IF NOT EXISTS reminders("+
-				"id INTEGER PRIMARY KEY AUTOINCREMENT, "+
-				"content TEXT, "+
-				"date TEXT, "+
-				"user_id TEXT,"+
-				"state INTEGER,"+
-				"FOREIGN KEY(user_id) REFERENCES facebook_users(user_id))";
 		db.execSQL(CREATE_TABLE_REMINDERS_IF_NOT_EXISTS);
-
-		String CREATE_TABLE_FACEBOOKUSER_IF_NOT_EXISTS =
-				"CREATE TABLE IF NOT EXISTS facebook_users("+
-				"user_id INTEGER PRIMARY KEY AUTOINCREMENT,"+
-				"image TEXT,"+
-				"name TEXT,"+
-				"mail TEXT)";
-		db.execSQL(CREATE_TABLE_FACEBOOKUSER_IF_NOT_EXISTS);
+        db.execSQL(CREATE_TABLE_FACEBOOK_USER_IF_NOT_EXISTS);
 	}
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-
+        //Please Ringo implement something here.
 	}
 
-	/*
-	 *Init some constants
-	 */
-	//Table name
-	private static final String TABLE_REMINDERS = "reminders";
-	//Columns
-	private static final String COLUMN_CONTENT = "content";
-	private static final String COLUMN_DATE = "date";
-	private static final String COLUMN_USER_ID = "user_id";
-	private static final String COLUMN_STATE = "state";
 
 	public void insertReminders(Reminder reminder, FacebookUser facebookUser){
 		Log.d(TAG,reminder.toString());
@@ -71,13 +88,7 @@ public class SQLiteHelper extends SQLiteOpenHelper{
 		values.put(COLUMN_STATE, reminder.getState());
 		db.insert(TABLE_REMINDERS, null, values);
 	}
-	//Table name
-	private static final String TABLE_FACEBOOK_USERS = "facebook_users";
-	//Columns
-	private static final String COLUMN_FACEBOOK_USER_ID = "user_id";
-	private static final String COLUMN_IMAGE_ID= "image";
-	private static final String COLUMN_NAME= "name";
-	private static final String COLUMN_MAIL = "mail";
+
 
 	public void insertFacebookUser(FacebookUser facebookUser){
 		Log.d(TAG,facebookUser.toString());
@@ -92,9 +103,14 @@ public class SQLiteHelper extends SQLiteOpenHelper{
 		db.insert(TABLE_FACEBOOK_USERS, null, values);
 	}
 
+
 	public void selectFacebookUser(FacebookUser facebookUser){
 		SQLiteDatabase db = this.getReadableDatabase();
-		Cursor c = db.rawQuery("SELECT * FROM "+TABLE_FACEBOOK_USERS+" where user_id="+facebookUser.getUserId()+";", null);
+		Cursor c = db.rawQuery("SELECT * FROM "
+                +TABLE_FACEBOOK_USERS
+                +" where user_id="+facebookUser.getUserId()
+                +";"
+                ,null);
 		if(c.moveToFirst()){
 			do{
 				Log.w(TAG, c.getString(0)+
@@ -106,26 +122,44 @@ public class SQLiteHelper extends SQLiteOpenHelper{
 		c.close();
 		db.close();
 	}
-	public List<Reminder> selectReminder(FacebookUser facebookUser){
-		List<Reminder> reminderList = new ArrayList<Reminder>();
+
+
+	public List<Reminder> selectReminder(FacebookUser facebookUser, int state){
+		String activeRemindersQuery = "SELECT * FROM "
+                +TABLE_REMINDERS
+                +" where user_id="+facebookUser.getUserId()
+                +" AND state=1;";
+        String expiredRemindersQuery = "SELECT * FROM "
+                +TABLE_REMINDERS
+                +" where user_id="+facebookUser.getUserId()
+                +" AND state=0;";
+
+        List<Reminder> reminderList = new ArrayList<Reminder>();
 		Reminder reminder = new Reminder();
 		SQLiteDatabase db = this.getReadableDatabase();
-		Cursor c = db.rawQuery("SELECT * FROM "+TABLE_REMINDERS+" where user_id="+facebookUser.getUserId()+";", null);
+
+        Cursor c;
+        if (state==1){
+            c = db.rawQuery(activeRemindersQuery, null);
+        }else{
+            c = db.rawQuery(expiredRemindersQuery, null);
+        }
+
 		if(c.moveToFirst()){
 			do{
 				reminder.setContent(c.getString(1));
 				reminder.setDate(c.getString(2));
 				reminder.setUserId(c.getString(3));
-				reminder.setState(c.getString(4));
+				reminder.setState(Integer.parseInt(c.getString(4)));
 				//Do something Here with values
 				Log.w(TAG, reminder.getContent()+"/"+reminder.getDate());
 				reminderList.add(reminder);
 			}while(c.moveToNext());
 		}else{
-			reminder.setContent("Example content");
-			reminder.setDate("This user has no reminders yet");
+			reminder.setContent(EXAMPLE_CONTENT);
+			reminder.setDate(EXAMPLE_DATE);
 			reminder.setUserId(facebookUser.getImage());
-			reminder.setState("1");
+			reminder.setState(1);
 			reminderList.add(reminder);
 		}
 		Log.w(TAG, reminderList.get(0).getContent());
@@ -134,6 +168,4 @@ public class SQLiteHelper extends SQLiteOpenHelper{
 		return reminderList;
 	}
 
-	public void deleteReminder(Reminder reminder){
-	}
 }

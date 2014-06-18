@@ -10,7 +10,7 @@
     <string name="reminders_title">Reminders</string>
     <string name="welcome_message">Please, log in!</string>
     <string name="logout_button_text">Log out</string>
-    <string name="add_reminder_button_text">Add</string>
+    <string name="add_reminder_button_text">Add reminder</string>
     <string name="add_reminder">Add reminder</string>
     <string name="reminder_content">Reminder:</string>
     <string name="reminder_content_hint">write the reminder text</string>
