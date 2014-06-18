@@ -21,7 +21,6 @@ import java.util.Arrays;
 
 public class LoginFragment extends Fragment {
 	FacebookUser mFacebookUser;
-	private LoginButton loginButton;
 	private static final String TAG = "MainFragment";
 	private Session.StatusCallback callback = new Session.StatusCallback() {
 		@Override
@@ -34,7 +33,7 @@ public class LoginFragment extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.activity_main, container, false);
-		loginButton = (LoginButton) view.findViewById(R.id.loginButton);
+		LoginButton loginButton = (LoginButton) view.findViewById(R.id.loginButton);
 		loginButton.setFragment(this);
 		loginButton.setReadPermissions(Arrays.asList("email","public_profile"));
 		return view;

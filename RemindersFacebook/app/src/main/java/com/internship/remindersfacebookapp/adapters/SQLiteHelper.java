@@ -1,4 +1,4 @@
-package com.internship.remindersfacebookapp.adaptersandhelpers;
+package com.internship.remindersfacebookapp.adapters;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -135,7 +135,6 @@ public class SQLiteHelper extends SQLiteOpenHelper{
                 +" AND state=0;";
 
         List<Reminder> reminderList = new ArrayList<Reminder>();
-		Reminder reminder = new Reminder();
 		SQLiteDatabase db = this.getReadableDatabase();
 
         Cursor c;
@@ -147,6 +146,7 @@ public class SQLiteHelper extends SQLiteOpenHelper{
 
 		if(c.moveToFirst()){
 			do{
+                Reminder reminder = new Reminder();
 				reminder.setContent(c.getString(1));
 				reminder.setDate(c.getString(2));
 				reminder.setUserId(c.getString(3));
@@ -156,6 +156,7 @@ public class SQLiteHelper extends SQLiteOpenHelper{
 				reminderList.add(reminder);
 			}while(c.moveToNext());
 		}else{
+            Reminder reminder = new Reminder();
 			reminder.setContent(EXAMPLE_CONTENT);
 			reminder.setDate(EXAMPLE_DATE);
 			reminder.setUserId(facebookUser.getImage());

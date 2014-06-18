@@ -10,10 +10,6 @@ public class FacebookUser {
 	private String mImage;
 	private long userId;
 
-
-
-
-
 	public FacebookUser(String userName, String userMail, String userImage) {
 		mName=userName;
 		mMail=userMail;
