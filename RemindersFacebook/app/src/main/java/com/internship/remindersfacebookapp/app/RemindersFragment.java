@@ -15,6 +15,8 @@ public class RemindersFragment extends ListFragment {
 private static int BUNDLE_SIZE = 1;
 private String header;
 private FacebookUser mFacebookUser;
+private View mView;
+private SQLiteAdapter db;
     public RemindersFragment newInstance(String message) {
         this.setArguments(new Bundle(BUNDLE_SIZE));
         header = message;
@@ -23,22 +25,23 @@ private FacebookUser mFacebookUser;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.reminders_fragments, container, false);
-	    SQLiteAdapter db = new SQLiteAdapter(view.getContext());
-
+        mView = inflater.inflate(R.layout.reminders_fragments, container, false);
+	    db = new SQLiteAdapter(mView.getContext());
 	    Bundle extras = getActivity().getIntent().getExtras();
-        TextView textView = (TextView) view.findViewById(R.id.profile_name);
+        TextView textView = (TextView) mView.findViewById(R.id.profile_name);
         textView.setText(header);
 	    mFacebookUser = new FacebookUser(
 			    extras.getString(FacebookUser.USERNAME),
 			    extras.getString(FacebookUser.MAIL),
 			    extras.getString(FacebookUser.IMAGE));
-        refreshList(view,db);
-        return view;
+        refreshList(mView,db);
+        return mView;
     }
 
     @Override
     public void onResume() {
+        //db.deleteAllReminders();
+        refreshList(mView,db);
         super.onResume();
 
     }

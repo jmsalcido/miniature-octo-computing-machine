@@ -171,6 +171,6 @@ public class SQLiteAdapter extends SQLiteOpenHelper{
 
     public void deleteAllReminders(){
         SQLiteDatabase db = this.getReadableDatabase();
-        db.execSQL("DELETE * FROM REMINDERS");
+        db.execSQL("DELETE FROM REMINDERS");
     }
 }

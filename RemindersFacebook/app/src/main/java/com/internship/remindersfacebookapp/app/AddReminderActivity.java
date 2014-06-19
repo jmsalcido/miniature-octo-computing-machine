@@ -1,13 +1,21 @@
 package com.internship.remindersfacebookapp.app;
 
 import android.app.Activity;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
+import com.internship.remindersfacebookapp.adapters.ReminderBroadcastReceiver;
 import com.internship.remindersfacebookapp.adapters.SQLiteAdapter;
 import com.internship.remindersfacebookapp.models.FacebookUser;
 import com.internship.remindersfacebookapp.models.Reminder;
@@ -20,7 +28,11 @@ public class AddReminderActivity extends Activity {
 	private FacebookUser mFacebookUser;
     private Reminder mReminder = new Reminder();
     private TimePicker mTimePicker;
+    private AlarmManager mAlarmManager;
     SQLiteAdapter db;
+    PendingIntent pi;
+    BroadcastReceiver br;
+    AlarmManager am;
     @Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -33,8 +45,14 @@ public class AddReminderActivity extends Activity {
 				extras.getString(FacebookUser.USERNAME),
 				extras.getString(FacebookUser.MAIL),
 				extras.getString(FacebookUser.IMAGE));
+        mAlarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         db = new SQLiteAdapter(getApplicationContext());
 	}
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+    }
 
     public void AddReminder(View view){
         Calendar currentTime = Calendar.getInstance();
@@ -48,20 +66,26 @@ public class AddReminderActivity extends Activity {
         reminderTime.set(year,month,day);
         reminderTime.set(Calendar.HOUR_OF_DAY, hour);
         reminderTime.set(Calendar.MINUTE, minute);
+        reminderTime.set(Calendar.SECOND, 0);
 
-        Log.w("test", currentTime.getTime().toString());
-        Log.w("test", reminderTime.getTime().toString());
-
+        if(currentTime.getTimeInMillis()>=reminderTime.getTimeInMillis()){
+            mReminder.setState(0);
+        }else{
+            mReminder.setState(1);
+            setAlarm(reminderTime);
+        }
         mReminder.setContent(mContentText.getText().toString());
         mReminder.setUserId(String.valueOf(mFacebookUser.getUserId()));
-        mReminder.setState(1);
-        String fullDate = String.valueOf(day)
-                +"/"+String.valueOf(month)
-                +"/"+String.valueOf(year)
-                +" - "+String.valueOf(hour)
-                +":"+String.valueOf(minute);
-        mReminder.setDate(fullDate);
-        db.insertReminders(mReminder,mFacebookUser);
+
+        mReminder.setDate(reminderTime.getTime().toString());
+        db.insertReminders(mReminder, mFacebookUser);
         finish();
+    }
+
+    public void setAlarm(Calendar calendar){
+        Intent intent = new Intent(this, ReminderBroadcastReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this.getApplicationContext(), 234324243, intent, 0);
+        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+        alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis() , pendingIntent);
     }
 }
