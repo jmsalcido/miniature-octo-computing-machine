@@ -14,5 +14,6 @@
     <string name="add_reminder">Add reminder</string>
     <string name="reminder_content">Reminder:</string>
     <string name="reminder_content_hint">write the reminder text</string>
+    <string name="delete_button_text">Delete all</string>
     <string name="reminder_date">Date:</string>
 </resources>

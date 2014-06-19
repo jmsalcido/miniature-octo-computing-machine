@@ -8,9 +8,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.internship.remindersfacebookapp.adapters.ReminderListAdapter;
-import com.internship.remindersfacebookapp.adapters.SQLiteHelper;
+import com.internship.remindersfacebookapp.adapters.SQLiteAdapter;
 import com.internship.remindersfacebookapp.models.FacebookUser;
-import com.internship.remindersfacebookapp.models.ViewHolder;
 
 public class RemindersFragment extends ListFragment {
 private static int BUNDLE_SIZE = 1;
@@ -25,7 +24,8 @@ private FacebookUser mFacebookUser;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.reminders_fragments, container, false);
-	    SQLiteHelper db = new SQLiteHelper(view.getContext());
+	    SQLiteAdapter db = new SQLiteAdapter(view.getContext());
+
 	    Bundle extras = getActivity().getIntent().getExtras();
         TextView textView = (TextView) view.findViewById(R.id.profile_name);
         textView.setText(header);
@@ -40,15 +40,15 @@ private FacebookUser mFacebookUser;
     @Override
     public void onResume() {
         super.onResume();
+
     }
-    public void refreshList(View view, SQLiteHelper db){
+
+    public void refreshList(View view, SQLiteAdapter db){
         if(header.equals(ViewPagerActivity.HEADER_1)){
-            this.setListAdapter(
-                    new ReminderListAdapter(view.getContext(), db.selectReminder(mFacebookUser,1)));
+            this.setListAdapter(new ReminderListAdapter(view.getContext(), db.selectReminder(mFacebookUser,1)));
         }
         if(header.equals(ViewPagerActivity.HEADER_2)){
-            this.setListAdapter(
-                    new ReminderListAdapter(view.getContext(), db.selectReminder(mFacebookUser,0)));
+            this.setListAdapter(new ReminderListAdapter(view.getContext(), db.selectReminder(mFacebookUser,0)));
         }
     }
 }

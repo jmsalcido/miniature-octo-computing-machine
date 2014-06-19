@@ -13,7 +13,7 @@ import android.view.MenuItem;
 import com.facebook.Session;
 import com.facebook.SessionState;
 import com.internship.remindersfacebookapp.adapters.FragmentPageAdapter;
-import com.internship.remindersfacebookapp.adapters.SQLiteHelper;
+import com.internship.remindersfacebookapp.adapters.SQLiteAdapter;
 import com.internship.remindersfacebookapp.models.FacebookUser;
 
 import java.util.ArrayList;
@@ -38,7 +38,7 @@ public class ViewPagerActivity extends FragmentActivity{
 				extras.getString(FacebookUser.MAIL),
 				extras.getString(FacebookUser.IMAGE));
         pager.setAdapter(mPageAdapter);
-		SQLiteHelper db = new SQLiteHelper(getApplicationContext());
+		SQLiteAdapter db = new SQLiteAdapter(getApplicationContext());
 		db.insertFacebookUser(mFacebookUser);
 		db.selectFacebookUser(mFacebookUser);
 	}

@@ -13,7 +13,7 @@ import com.internship.remindersfacebookapp.models.Reminder;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SQLiteHelper extends SQLiteOpenHelper{
+public class SQLiteAdapter extends SQLiteOpenHelper{
     //Constant and variables declaration
 	private static final String TAG = "SQL";
 	private static final int DATABASE_VERSION=1;
@@ -60,7 +60,7 @@ public class SQLiteHelper extends SQLiteOpenHelper{
     /*
      * End of variable and constants declaration.
      */
-    public SQLiteHelper(Context context){
+    public SQLiteAdapter(Context context){
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
 	}
 
@@ -169,4 +169,8 @@ public class SQLiteHelper extends SQLiteOpenHelper{
 		return reminderList;
 	}
 
+    public void deleteAllReminders(){
+        SQLiteDatabase db = this.getReadableDatabase();
+        db.execSQL("DELETE * FROM REMINDERS");
+    }
 }
