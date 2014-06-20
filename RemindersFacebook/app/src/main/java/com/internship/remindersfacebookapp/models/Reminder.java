@@ -1,6 +1,9 @@
 package com.internship.remindersfacebookapp.models;
 
 public class Reminder {
+    public static final String CONTENT = "CONTENT";
+    public static final String DATE = "DATE";
+    public static final String USER_ID = "USER_ID";
 	private String mContent;
 	private String mDate;
 	private String mUserId;

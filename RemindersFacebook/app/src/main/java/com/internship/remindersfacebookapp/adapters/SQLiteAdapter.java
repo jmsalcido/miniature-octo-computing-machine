@@ -173,4 +173,24 @@ public class SQLiteAdapter extends SQLiteOpenHelper{
         SQLiteDatabase db = this.getReadableDatabase();
         db.execSQL("DELETE FROM REMINDERS");
     }
+
+    public int selectLastReminderId(){
+        String selectQuery = "SELECT id FROM "
+                +TABLE_REMINDERS+";";
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor c = db.rawQuery(selectQuery,null);
+        int requestCode=0;
+        if(c.moveToFirst()) {
+            do {
+                requestCode=Integer.parseInt(c.getString(0));
+            } while (c.moveToNext());
+        }
+        return requestCode;
+    }
+
+    public void setStateToInactive(String searchedId){
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "UPDATE reminders SET state=0 WHERE id="+searchedId;
+        db.execSQL(query);
+    }
 }
