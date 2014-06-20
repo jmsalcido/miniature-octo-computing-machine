@@ -78,7 +78,6 @@ public class SQLiteAdapter extends SQLiteOpenHelper{
 
 
 	public void insertReminders(Reminder reminder, FacebookUser facebookUser){
-		Log.d(TAG,reminder.toString());
 		SQLiteDatabase db = this.getWritableDatabase();
 
 		ContentValues values = new ContentValues();
@@ -91,7 +90,6 @@ public class SQLiteAdapter extends SQLiteOpenHelper{
 
 
 	public void insertFacebookUser(FacebookUser facebookUser){
-		Log.d(TAG,facebookUser.toString());
 		SQLiteDatabase db = this.getWritableDatabase();
 
 		ContentValues values = new ContentValues();
@@ -155,15 +153,7 @@ public class SQLiteAdapter extends SQLiteOpenHelper{
 				Log.w(TAG, reminder.getContent()+"/"+reminder.getDate());
 				reminderList.add(reminder);
 			}while(c.moveToNext());
-		}else{
-            Reminder reminder = new Reminder();
-			reminder.setContent(EXAMPLE_CONTENT);
-			reminder.setDate(EXAMPLE_DATE);
-			reminder.setUserId(facebookUser.getImage());
-			reminder.setState(1);
-			reminderList.add(reminder);
 		}
-		Log.w(TAG, reminderList.get(0).getContent());
 		c.close();
 		db.close();
 		return reminderList;
@@ -188,7 +178,7 @@ public class SQLiteAdapter extends SQLiteOpenHelper{
         return requestCode;
     }
 
-    public void setStateToInactive(String searchedId){
+    public void updateStateToInactive(String searchedId){
         SQLiteDatabase db = this.getReadableDatabase();
         String query = "UPDATE reminders SET state=0 WHERE id="+searchedId;
         db.execSQL(query);

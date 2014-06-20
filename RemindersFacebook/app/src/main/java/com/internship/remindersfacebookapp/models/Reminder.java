@@ -4,6 +4,7 @@ public class Reminder {
     public static final String CONTENT = "CONTENT";
     public static final String DATE = "DATE";
     public static final String USER_ID = "USER_ID";
+    public static final String ID = "ID";
 	private String mContent;
 	private String mDate;
 	private String mUserId;

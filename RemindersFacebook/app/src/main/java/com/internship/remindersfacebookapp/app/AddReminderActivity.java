@@ -65,7 +65,7 @@ public class AddReminderActivity extends Activity {
             mReminder.setState(0);
         }else{
             mReminder.setState(1);
-            setAlarm(reminderTime, db.selectLastReminderId());
+            setAlarm(reminderTime, db.selectLastReminderId()+1);
         }
         mReminder.setContent(mContentText.getText().toString());
         mReminder.setUserId(String.valueOf(mFacebookUser.getUserId()));
@@ -76,8 +76,10 @@ public class AddReminderActivity extends Activity {
 
     public void setAlarm(Calendar calendar, int requestCode){
         Intent intent = new Intent(this, ReminderBroadcastReceiver.class);
-
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this.getApplicationContext(), requestCode, intent, 0);
+        intent.putExtra(Reminder.CONTENT,mReminder.getContent());
+        intent.putExtra(Reminder.DATE,mReminder.getDate());
+        intent.putExtra(Reminder.ID,String.valueOf(requestCode));
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), requestCode, intent, 0);
         AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
         alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis() , pendingIntent);
     }

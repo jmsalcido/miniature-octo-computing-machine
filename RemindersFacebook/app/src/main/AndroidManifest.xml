@@ -32,6 +32,9 @@
         <meta-data android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/app_ID"/>
         <receiver android:name="com.internship.remindersfacebookapp.adapters.ReminderBroadcastReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+            </intent-filter>
         </receiver>
     </application>
 
