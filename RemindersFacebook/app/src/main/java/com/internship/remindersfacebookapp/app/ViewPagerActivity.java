@@ -23,6 +23,7 @@ import java.util.List;
 public class ViewPagerActivity extends FragmentActivity{
     FragmentPageAdapter mPageAdapter;
 	FacebookUser mFacebookUser;
+    //This strings give a tag to control which fragment will show the active or expired reminders.
     public static final String HEADER_1 = "Active reminders";
     public static final String HEADER_2 = "Expired reminders";
 	@Override
@@ -40,12 +41,15 @@ public class ViewPagerActivity extends FragmentActivity{
         pager.setAdapter(mPageAdapter);
 		SQLiteAdapter db = new SQLiteAdapter(getApplicationContext());
 		db.insertFacebookUser(mFacebookUser);
-		db.selectFacebookUser(mFacebookUser);
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
+        /*
+        if by some reason the session closes, the activity will close and call de statuscallback
+        from the login fragment, and set the login visible again.
+         */
 		if(Session.getActiveSession().getState() == SessionState.CLOSED){
 			this.finish();
 		}

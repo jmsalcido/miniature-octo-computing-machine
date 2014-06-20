@@ -101,7 +101,7 @@ public class SQLiteAdapter extends SQLiteOpenHelper{
 		db.insert(TABLE_FACEBOOK_USERS, null, values);
 	}
 
-
+    //Use when needed, only to check the facebook user.
 	public void selectFacebookUser(FacebookUser facebookUser){
 		SQLiteDatabase db = this.getReadableDatabase();
 		Cursor c = db.rawQuery("SELECT * FROM "
@@ -159,6 +159,9 @@ public class SQLiteAdapter extends SQLiteOpenHelper{
 		return reminderList;
 	}
 
+    /*
+    Avoid using the deleteAllReminders method
+     */
     public void deleteAllReminders(){
         SQLiteDatabase db = this.getReadableDatabase();
         db.execSQL("DELETE FROM REMINDERS");
@@ -170,6 +173,7 @@ public class SQLiteAdapter extends SQLiteOpenHelper{
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor c = db.rawQuery(selectQuery,null);
         int requestCode=0;
+        //i should change this and move to last...
         if(c.moveToFirst()) {
             do {
                 requestCode=Integer.parseInt(c.getString(0));

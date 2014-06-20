@@ -22,20 +22,28 @@ import java.util.Arrays;
 public class LoginFragment extends Fragment {
 	FacebookUser mFacebookUser;
 	private static final String TAG = "MainFragment";
+    private UiLifecycleHelper uiHelper;
+    private LoginButton mLoginButton;
+    /*
+    The session status callback calls the onSessionState method, which handles
+    the state change.
+     */
 	private Session.StatusCallback callback = new Session.StatusCallback() {
 		@Override
 		public void call(Session session, SessionState state, Exception exception) {
 			onSessionStateChange(session, state, exception);
 		}
 	};
-	private UiLifecycleHelper uiHelper;
 
+    /*
+    Lifecycle method start
+    */
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.activity_main, container, false);
-		LoginButton loginButton = (LoginButton) view.findViewById(R.id.loginButton);
-		loginButton.setFragment(this);
-		loginButton.setReadPermissions(Arrays.asList("email","public_profile"));
+		mLoginButton = (LoginButton) view.findViewById(R.id.loginButton);
+		mLoginButton.setFragment(this);
+		mLoginButton.setReadPermissions(Arrays.asList("email", "public_profile"));
 		return view;
 	}
 
@@ -81,10 +89,14 @@ public class LoginFragment extends Fragment {
 		super.onSaveInstanceState(outState);
 		uiHelper.onSaveInstanceState(outState);
 	}
+    /*
+    End of lifecycle methods with the uihelper
+     */
 
 	private void onSessionStateChange(Session session, SessionState state, Exception exception) {
 		Log.i(TAG, "Logged in...");
 		if (state.isOpened()) {
+            mLoginButton.setVisibility(View.INVISIBLE);
 			Request.newMeRequest(session, new Request.GraphUserCallback() {
 				// callback after Graph API response with user object
 				@Override
@@ -102,8 +114,8 @@ public class LoginFragment extends Fragment {
 					}
 				}
 			}).executeAsync();
-
 		} else if (state.isClosed()) {
+            mLoginButton.setVisibility(View.VISIBLE);
 			Log.i(TAG, "Logged out...");
 		}
 	}
