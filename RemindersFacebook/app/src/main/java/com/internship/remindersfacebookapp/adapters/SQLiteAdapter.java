@@ -7,7 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-import com.internship.remindersfacebookapp.models.FacebookUser;
+import com.internship.remindersfacebookapp.models.RemindersUser;
 import com.internship.remindersfacebookapp.models.Reminder;
 
 import java.util.ArrayList;
@@ -77,36 +77,36 @@ public class SQLiteAdapter extends SQLiteOpenHelper{
 	}
 
 
-	public void insertReminders(Reminder reminder, FacebookUser facebookUser){
+	public void insertReminders(Reminder reminder, RemindersUser remindersUser){
 		SQLiteDatabase db = this.getWritableDatabase();
 
 		ContentValues values = new ContentValues();
 		values.put(COLUMN_CONTENT, reminder.getContent());
 		values.put(COLUMN_DATE,reminder.getDate());
-		values.put(COLUMN_USER_ID,facebookUser.getUserId());
+		values.put(COLUMN_USER_ID, remindersUser.getUserId());
 		values.put(COLUMN_STATE, reminder.getState());
 		db.insert(TABLE_REMINDERS, null, values);
 	}
 
 
-	public void insertFacebookUser(FacebookUser facebookUser){
+	public void insertFacebookUser(RemindersUser remindersUser){
 		SQLiteDatabase db = this.getWritableDatabase();
 
 		ContentValues values = new ContentValues();
-		values.put(COLUMN_FACEBOOK_USER_ID, facebookUser.getUserId());
-		values.put(COLUMN_IMAGE_ID, facebookUser.getImage());
-		values.put(COLUMN_NAME, facebookUser.getName());
-		values.put(COLUMN_MAIL, facebookUser.getMail());
+		values.put(COLUMN_FACEBOOK_USER_ID, remindersUser.getUserId());
+		values.put(COLUMN_IMAGE_ID, remindersUser.getImage());
+		values.put(COLUMN_NAME, remindersUser.getName());
+		values.put(COLUMN_MAIL, remindersUser.getMail());
 
 		db.insert(TABLE_FACEBOOK_USERS, null, values);
 	}
 
     //Use when needed, only to check the facebook user.
-	public void selectFacebookUser(FacebookUser facebookUser){
+	public void selectFacebookUser(RemindersUser remindersUser){
 		SQLiteDatabase db = this.getReadableDatabase();
 		Cursor c = db.rawQuery("SELECT * FROM "
                 +TABLE_FACEBOOK_USERS
-                +" where user_id="+facebookUser.getUserId()
+                +" where user_id="+ remindersUser.getUserId()
                 +";"
                 ,null);
 		if(c.moveToFirst()){
@@ -122,14 +122,14 @@ public class SQLiteAdapter extends SQLiteOpenHelper{
 	}
 
 
-	public List<Reminder> selectReminder(FacebookUser facebookUser, int state){
+	public List<Reminder> selectReminder(RemindersUser remindersUser, int state){
 		String activeRemindersQuery = "SELECT * FROM "
                 +TABLE_REMINDERS
-                +" where user_id="+facebookUser.getUserId()
+                +" where user_id="+ remindersUser.getUserId()
                 +" AND state=1;";
         String expiredRemindersQuery = "SELECT * FROM "
                 +TABLE_REMINDERS
-                +" where user_id="+facebookUser.getUserId()
+                +" where user_id="+ remindersUser.getUserId()
                 +" AND state=0;";
 
         List<Reminder> reminderList = new ArrayList<Reminder>();

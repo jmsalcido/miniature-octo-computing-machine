@@ -9,12 +9,12 @@ import android.widget.TextView;
 
 import com.internship.remindersfacebookapp.adapters.ReminderListAdapter;
 import com.internship.remindersfacebookapp.adapters.SQLiteAdapter;
-import com.internship.remindersfacebookapp.models.FacebookUser;
+import com.internship.remindersfacebookapp.models.RemindersUser;
 
 public class RemindersFragment extends ListFragment {
 private static int BUNDLE_SIZE = 1;
 private String header;
-private FacebookUser mFacebookUser;
+private RemindersUser mRemindersUser;
 private View mView;
 private SQLiteAdapter db;
     public RemindersFragment newInstance(String message) {
@@ -30,10 +30,11 @@ private SQLiteAdapter db;
 	    Bundle extras = getActivity().getIntent().getExtras();
         TextView textView = (TextView) mView.findViewById(R.id.profile_name);
         textView.setText(header);
-	    mFacebookUser = new FacebookUser(
-			    extras.getString(FacebookUser.USERNAME),
-			    extras.getString(FacebookUser.MAIL),
-			    extras.getString(FacebookUser.IMAGE));
+        mRemindersUser = new RemindersUser(
+                extras.getString(RemindersUser.USERNAME),
+                extras.getString(RemindersUser.MAIL),
+                extras.getString(RemindersUser.IMAGE),
+                extras.getString(RemindersUser.USER_ID));
         refreshList(mView,db);
         return mView;
     }
@@ -54,10 +55,10 @@ private SQLiteAdapter db;
 
     public void refreshList(View view, SQLiteAdapter db){
         if(header.equals(ViewPagerActivity.HEADER_1)){
-            this.setListAdapter(new ReminderListAdapter(view.getContext(), db.selectReminder(mFacebookUser,1)));
+            this.setListAdapter(new ReminderListAdapter(view.getContext(), db.selectReminder(mRemindersUser,1)));
         }
         if(header.equals(ViewPagerActivity.HEADER_2)){
-            this.setListAdapter(new ReminderListAdapter(view.getContext(), db.selectReminder(mFacebookUser,0)));
+            this.setListAdapter(new ReminderListAdapter(view.getContext(), db.selectReminder(mRemindersUser,0)));
         }
     }
 }

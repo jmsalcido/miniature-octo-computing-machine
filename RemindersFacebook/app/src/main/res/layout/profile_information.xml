@@ -41,4 +41,12 @@
         android:layout_below="@+id/profile_mail"
         android:layout_centerHorizontal="true"/>
 
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/imageView"
+        android:layout_above="@+id/profile_name"
+        android:layout_centerHorizontal="true"
+        android:contentDescription="googleimage" />
+
 </RelativeLayout>

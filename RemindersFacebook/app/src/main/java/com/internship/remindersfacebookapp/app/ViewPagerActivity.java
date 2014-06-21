@@ -14,7 +14,7 @@ import com.facebook.Session;
 import com.facebook.SessionState;
 import com.internship.remindersfacebookapp.adapters.FragmentPageAdapter;
 import com.internship.remindersfacebookapp.adapters.SQLiteAdapter;
-import com.internship.remindersfacebookapp.models.FacebookUser;
+import com.internship.remindersfacebookapp.models.RemindersUser;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +22,7 @@ import java.util.List;
 
 public class ViewPagerActivity extends FragmentActivity{
     FragmentPageAdapter mPageAdapter;
-	FacebookUser mFacebookUser;
+	RemindersUser mRemindersUser;
     //This strings give a tag to control which fragment will show the active or expired reminders.
     public static final String HEADER_1 = "Active reminders";
     public static final String HEADER_2 = "Expired reminders";
@@ -34,13 +34,14 @@ public class ViewPagerActivity extends FragmentActivity{
         mPageAdapter = new FragmentPageAdapter(getSupportFragmentManager(), fragments);
         ViewPager pager = (ViewPager)findViewById(R.id.viewpager);
 		Bundle extras = getIntent().getExtras();
-		mFacebookUser = new FacebookUser(
-				extras.getString(FacebookUser.USERNAME),
-				extras.getString(FacebookUser.MAIL),
-				extras.getString(FacebookUser.IMAGE));
+        mRemindersUser = new RemindersUser(
+                extras.getString(RemindersUser.USERNAME),
+                extras.getString(RemindersUser.MAIL),
+                extras.getString(RemindersUser.IMAGE),
+                extras.getString(RemindersUser.USER_ID));
         pager.setAdapter(mPageAdapter);
 		SQLiteAdapter db = new SQLiteAdapter(getApplicationContext());
-		db.insertFacebookUser(mFacebookUser);
+		db.insertFacebookUser(mRemindersUser);
 	}
 
 	@Override
@@ -60,9 +61,9 @@ public class ViewPagerActivity extends FragmentActivity{
 		switch (item.getItemId()) {
 			case R.id.add_reminder:
 				Intent reminderActivity = new Intent(getApplicationContext(), AddReminderActivity.class);
-				reminderActivity.putExtra(FacebookUser.USERNAME, mFacebookUser.getName());
-				reminderActivity.putExtra(FacebookUser.MAIL, mFacebookUser.getMail());
-				reminderActivity.putExtra(FacebookUser.IMAGE, mFacebookUser.getImage());
+				reminderActivity.putExtra(RemindersUser.USERNAME, mRemindersUser.getName());
+				reminderActivity.putExtra(RemindersUser.MAIL, mRemindersUser.getMail());
+				reminderActivity.putExtra(RemindersUser.IMAGE, mRemindersUser.getImage());
 				startActivity(reminderActivity);
 				return true;
 		}

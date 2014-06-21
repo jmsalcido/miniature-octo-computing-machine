@@ -13,7 +13,7 @@ import android.widget.TimePicker;
 
 import com.internship.remindersfacebookapp.adapters.ReminderBroadcastReceiver;
 import com.internship.remindersfacebookapp.adapters.SQLiteAdapter;
-import com.internship.remindersfacebookapp.models.FacebookUser;
+import com.internship.remindersfacebookapp.models.RemindersUser;
 import com.internship.remindersfacebookapp.models.Reminder;
 
 import java.util.Calendar;
@@ -21,7 +21,7 @@ import java.util.Calendar;
 public class AddReminderActivity extends Activity {
 	private EditText mContentText;
 	private DatePicker mDatePicker;
-	private FacebookUser mFacebookUser;
+	private RemindersUser mRemindersUser;
     private Reminder mReminder = new Reminder();
     private TimePicker mTimePicker;
     private AlarmManager mAlarmManager;
@@ -34,10 +34,11 @@ public class AddReminderActivity extends Activity {
 		mDatePicker = (DatePicker) findViewById(R.id.datePicker);
         mTimePicker = (TimePicker) findViewById(R.id.timePicker);
 		Bundle extras = getIntent().getExtras();
-		mFacebookUser = new FacebookUser(
-				extras.getString(FacebookUser.USERNAME),
-				extras.getString(FacebookUser.MAIL),
-				extras.getString(FacebookUser.IMAGE));
+		mRemindersUser = new RemindersUser(
+				extras.getString(RemindersUser.USERNAME),
+				extras.getString(RemindersUser.MAIL),
+                extras.getString(RemindersUser.IMAGE),
+				extras.getString(RemindersUser.USER_ID));
         mAlarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         db = new SQLiteAdapter(getApplicationContext());
 	}
@@ -68,9 +69,9 @@ public class AddReminderActivity extends Activity {
             setAlarm(reminderTime, db.selectLastReminderId()+1);
         }
         mReminder.setContent(mContentText.getText().toString());
-        mReminder.setUserId(String.valueOf(mFacebookUser.getUserId()));
+        mReminder.setUserId(String.valueOf(mRemindersUser.getUserId()));
         mReminder.setDate(reminderTime.getTime().toString());
-        db.insertReminders(mReminder, mFacebookUser);
+        db.insertReminders(mReminder, mRemindersUser);
         finish();
     }
 
