@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">RemindersFacebookApp</string>
+    <string name="app_ID">539216836184145</string>
+    <string name="profile_image_description">profile image view</string>
+    <string name="user_name">user name</string>
+    <string name="user_email">user email</string>
+    <string name="user_image">user image</string>
+    <string name="reminders_title">Reminders</string>
+    <string name="welcome_message">Please, log in!</string>
+    <string name="logout_button_text">Log out</string>
+    <string name="add_reminder_button_text">Add reminder</string>
+    <string name="add_reminder">Add reminder</string>
+    <string name="reminder_content">Reminder:</string>
+    <string name="reminder_content_hint">write the reminder text</string>
+    <string name="delete_button_text">Delete all</string>
+    <string name="reminder_date">Date:</string>
+</resources>
