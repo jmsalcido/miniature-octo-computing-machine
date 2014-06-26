@@ -49,16 +49,15 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/timePicker"
-        android:layout_below="@+id/datePicker"
-        android:layout_centerHorizontal="true" />
+        android:layout_below="@+id/reminder_editName"
+        android:layout_toRightOf="@+id/reminder_date" />
 
     <DatePicker
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/datePicker"
         android:calendarViewShown="false"
-        android:layout_below="@+id/reminder_editName"
-        android:layout_alignRight="@+id/timePicker"
-        android:layout_alignEnd="@+id/timePicker" />
+        android:layout_alignTop="@+id/reminder_date"
+        android:layout_toLeftOf="@+id/reminder_date" />
 
 </RelativeLayout>

@@ -24,7 +24,6 @@ dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'com.android.support:appcompat-v7:19.+'
     compile 'com.android.support:appcompat-v7:19.+'
-    compile 'com.google.android.gms:play-services:4.4.52'
     compile project(':facebook')
     compile 'com.android.support:support-v4:+'
 }

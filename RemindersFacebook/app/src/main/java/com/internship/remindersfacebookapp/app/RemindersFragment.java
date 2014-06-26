@@ -30,19 +30,13 @@ private SQLiteAdapter db;
 	    Bundle extras = getActivity().getIntent().getExtras();
         TextView textView = (TextView) mView.findViewById(R.id.profile_name);
         textView.setText(header);
-        mRemindersUser = new RemindersUser(
-                extras.getString(RemindersUser.USERNAME),
-                extras.getString(RemindersUser.MAIL),
-                extras.getString(RemindersUser.IMAGE),
+	    mRemindersUser = new RemindersUser(
+			    extras.getString(RemindersUser.USERNAME),
+			    extras.getString(RemindersUser.MAIL),
+			    extras.getString(RemindersUser.IMAGE),
                 extras.getString(RemindersUser.USER_ID));
         refreshList(mView,db);
         return mView;
-    }
-
-    @Override
-    public void onPause() {
-        refreshList(mView,db);
-        super.onPause();
     }
 
     @Override

@@ -5,18 +5,17 @@ public class RemindersUser {
 	public static String USERNAME="profile_name";
 	public static String MAIL="profile_mail";
 	public static String IMAGE="profile_image";
-    public static String USER_ID="user id";
-    public static int IS_FB_OR_G=0;
+    public static String USER_ID="user_id";
 	private String mName;
 	private String mMail;
 	private String mImage;
-	private long mUserId;
+	private String mUserId;
 
-	public RemindersUser(String userName, String userMail, String userId, String url) {
+	public RemindersUser(String userName, String userMail, String userImage, String userId) {
 		mName=userName;
 		mMail=userMail;
-		mImage=url;
-		mUserId = Long.parseLong(userId);
+		mImage=userImage;
+		mUserId = userId;
 	}
 
 	public String getImage() {
@@ -31,7 +30,7 @@ public class RemindersUser {
 		return mMail;
 	}
 
-	public long getUserId() {
+	public String getUserId() {
 		return mUserId;
 	}
 }

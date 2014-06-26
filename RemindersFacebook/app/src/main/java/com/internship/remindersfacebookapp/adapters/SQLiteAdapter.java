@@ -17,10 +17,10 @@ public class SQLiteAdapter extends SQLiteOpenHelper{
     //Constant and variables declaration
 	private static final String TAG = "SQL";
 	private static final int DATABASE_VERSION=1;
-	private static String DATABASE_NAME="FacebookReminderDB";
+	private static String DATABASE_NAME="ReminderDB";
 
     //Table for users name
-    private static final String TABLE_FACEBOOK_USERS = "facebook_users";
+    private static final String TABLE_REMINDERS_USERS = "reminders_users";
     //Table for users columns
     private static final String COLUMN_FACEBOOK_USER_ID = "user_id";
     private static final String COLUMN_IMAGE_ID= "image";
@@ -50,9 +50,9 @@ public class SQLiteAdapter extends SQLiteOpenHelper{
                     "state INTEGER,"+
                     "FOREIGN KEY(user_id) REFERENCES facebook_users(user_id))";
 
-    private static final String CREATE_TABLE_FACEBOOK_USER_IF_NOT_EXISTS =
-            "CREATE TABLE IF NOT EXISTS facebook_users("+
-                    "user_id INTEGER PRIMARY KEY AUTOINCREMENT,"+
+    private static final String CREATE_TABLE_REMINDER_USER_IF_NOT_EXISTS =
+            "CREATE TABLE IF NOT EXISTS reminders_users("+
+                    "user_id INTEGER PRIMARY KEY,"+
                     "image TEXT,"+
                     "name TEXT,"+
                     "mail TEXT)";
@@ -68,7 +68,7 @@ public class SQLiteAdapter extends SQLiteOpenHelper{
 	public void onCreate(SQLiteDatabase db) {
 		Log.w(TAG, db.getPath());
 		db.execSQL(CREATE_TABLE_REMINDERS_IF_NOT_EXISTS);
-        db.execSQL(CREATE_TABLE_FACEBOOK_USER_IF_NOT_EXISTS);
+        db.execSQL(CREATE_TABLE_REMINDER_USER_IF_NOT_EXISTS);
 	}
 
 	@Override
@@ -98,14 +98,14 @@ public class SQLiteAdapter extends SQLiteOpenHelper{
 		values.put(COLUMN_NAME, remindersUser.getName());
 		values.put(COLUMN_MAIL, remindersUser.getMail());
 
-		db.insert(TABLE_FACEBOOK_USERS, null, values);
+		db.insert(TABLE_REMINDERS_USERS, null, values);
 	}
 
-    //Use when needed, only to check the facebook user.
+
 	public void selectFacebookUser(RemindersUser remindersUser){
 		SQLiteDatabase db = this.getReadableDatabase();
 		Cursor c = db.rawQuery("SELECT * FROM "
-                +TABLE_FACEBOOK_USERS
+                + TABLE_REMINDERS_USERS
                 +" where user_id="+ remindersUser.getUserId()
                 +";"
                 ,null);
@@ -159,9 +159,6 @@ public class SQLiteAdapter extends SQLiteOpenHelper{
 		return reminderList;
 	}
 
-    /*
-    Avoid using the deleteAllReminders method
-     */
     public void deleteAllReminders(){
         SQLiteDatabase db = this.getReadableDatabase();
         db.execSQL("DELETE FROM REMINDERS");
@@ -173,7 +170,6 @@ public class SQLiteAdapter extends SQLiteOpenHelper{
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor c = db.rawQuery(selectQuery,null);
         int requestCode=0;
-        //i should change this and move to last...
         if(c.moveToFirst()) {
             do {
                 requestCode=Integer.parseInt(c.getString(0));

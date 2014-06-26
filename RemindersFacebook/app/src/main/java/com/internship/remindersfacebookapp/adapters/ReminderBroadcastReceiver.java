@@ -15,7 +15,7 @@ import com.internship.remindersfacebookapp.app.MainActivity;
 import com.internship.remindersfacebookapp.models.Reminder;
 
 public class ReminderBroadcastReceiver extends BroadcastReceiver {
-    private static final String TAG = "Broadcast Receiver";
+    private static final String TAG = "BROADCAST_RECEIVER";
     @Override
     public void onReceive(Context context, Intent intent) {
         SQLiteAdapter db = new SQLiteAdapter(context);
@@ -27,9 +27,9 @@ public class ReminderBroadcastReceiver extends BroadcastReceiver {
                     new Intent(context, MainActivity.class), 0);
             NotificationCompat.Builder mBuilder =
                     new NotificationCompat.Builder(context)
-                            .setSmallIcon(android.R.drawable.star_big_on)
-                            .setContentTitle("You have a reminder expired")
-                            .setContentText("better check it out");
+                            .setSmallIcon(android.R.drawable.star_on)
+                            .setContentTitle(intent.getExtras().get(Reminder.CONTENT).toString())
+                            .setContentText(intent.getExtras().get(Reminder.DATE).toString());
             mBuilder.setContentIntent(contentIntent);
             mBuilder.setDefaults(Notification.DEFAULT_SOUND);
             mBuilder.setAutoCancel(true);
