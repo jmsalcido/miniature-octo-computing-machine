@@ -25,7 +25,6 @@ public class AddReminderActivity extends Activity {
 	private RemindersUser mRemindersUser;
     private Reminder mReminder = new Reminder();
     private TimePicker mTimePicker;
-    private AlarmManager mAlarmManager;
     SQLiteAdapter db;
     @Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +39,6 @@ public class AddReminderActivity extends Activity {
 				extras.getString(RemindersUser.MAIL),
 				extras.getString(RemindersUser.IMAGE),
                 extras.getString(RemindersUser.USER_ID));
-        mAlarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         db = new SQLiteAdapter(getApplicationContext());
 	}
 
@@ -60,6 +58,7 @@ public class AddReminderActivity extends Activity {
             int minute=mTimePicker.getCurrentMinute();
 
             Calendar reminderTime = Calendar.getInstance();
+            //noinspection ResourceType
             reminderTime.set(year,month,day);
             reminderTime.set(Calendar.HOUR_OF_DAY, hour);
             reminderTime.set(Calendar.MINUTE, minute);
