@@ -43,6 +43,12 @@ public class AddReminderActivity extends Activity {
 	}
 
     @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        db.close();
+    }
+
+    @Override
     protected void onStop() {
         super.onStop();
     }
@@ -71,8 +77,9 @@ public class AddReminderActivity extends Activity {
                 mReminder.setContent(mContentText.getText().toString());
                 mReminder.setUserId(String.valueOf(mRemindersUser.getUserId()));
                 mReminder.setDate(reminderTime.getTime().toString());
-                setAlarm(reminderTime, db.selectLastReminderId()+1);
+                mReminder.setAlarmRequestCode(db.selectLastReminderId()+1);
                 db.insertReminders(mReminder, mRemindersUser);
+                setAlarm(reminderTime, db.selectLastReminderId());
                 finish();
             }
         }else{
@@ -82,12 +89,12 @@ public class AddReminderActivity extends Activity {
     }
 
     public void setAlarm(Calendar calendar, int requestCode){
-        Intent intent = new Intent(this, ReminderBroadcastReceiver.class);
-        intent.putExtra(Reminder.CONTENT,mReminder.getContent());
-        intent.putExtra(Reminder.DATE,mReminder.getDate());
-        intent.putExtra(Reminder.ID,String.valueOf(requestCode));
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), requestCode, intent, 0);
-        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-        alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis() , pendingIntent);
+        Intent mIntent = new Intent(this, ReminderBroadcastReceiver.class);
+        mIntent.putExtra(Reminder.CONTENT, mReminder.getContent());
+        mIntent.putExtra(Reminder.DATE, mReminder.getDate());
+        mIntent.putExtra(Reminder.ID, String.valueOf(requestCode));
+        PendingIntent mPendingIntent = PendingIntent.getBroadcast(getApplicationContext(), requestCode, mIntent, 0);
+        AlarmManager mAlarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+        mAlarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), mPendingIntent);
     }
 }

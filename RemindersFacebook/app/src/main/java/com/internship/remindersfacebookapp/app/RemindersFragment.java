@@ -1,6 +1,7 @@
 package com.internship.remindersfacebookapp.app;
 
 import android.app.AlertDialog;
+import android.app.PendingIntent;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
@@ -17,13 +18,12 @@ import com.internship.remindersfacebookapp.models.Reminder;
 import com.internship.remindersfacebookapp.models.RemindersUser;
 
 public class RemindersFragment extends ListFragment {
-private static int BUNDLE_SIZE = 1;
 private String header;
 private RemindersUser mRemindersUser;
 private View mView;
 private SQLiteAdapter db;
     public RemindersFragment newInstance(String message) {
-        this.setArguments(new Bundle(BUNDLE_SIZE));
+        this.setArguments(new Bundle(1));
         header = message;
         return this;
     }
@@ -44,8 +44,7 @@ private SQLiteAdapter db;
                         db.deleteSelectedReminder(selectedReminder.getContent(), selectedReminder.getDate());
                         refreshList(mView, db);
                     }
-                });
-                b.setNegativeButton("Edit", new DialogInterface.OnClickListener() {
+                }).setNegativeButton("Edit", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
                         //todo
                     }

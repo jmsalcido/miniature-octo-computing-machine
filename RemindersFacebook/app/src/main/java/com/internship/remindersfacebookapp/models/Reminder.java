@@ -8,7 +8,16 @@ public class Reminder {
 	private String mContent;
 	private String mDate;
 	private String mUserId;
-	private int mState;
+    private int mAlarmRequestCode;
+    private int mState;
+
+    public int getAlarmRequestCode() {
+        return mAlarmRequestCode;
+    }
+
+    public void setAlarmRequestCode(int alarmRequestCode) {
+        mAlarmRequestCode = alarmRequestCode;
+    }
 
     public int getState() {
         return mState;

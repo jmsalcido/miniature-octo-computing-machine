@@ -18,24 +18,28 @@ public class ReminderBroadcastReceiver extends BroadcastReceiver {
     private static final String TAG = "BROADCAST_RECEIVER";
     @Override
     public void onReceive(Context context, Intent intent) {
+        String reminderID=intent.getExtras().get(Reminder.ID).toString();
         SQLiteAdapter db = new SQLiteAdapter(context);
-        db.updateStateToInactive(intent.getExtras().get(Reminder.ID).toString());
-        if(Session.getActiveSession().getState() == SessionState.CLOSED){
-            Log.w(TAG, Session.getActiveSession().getState().toString());
-        }else {
-            PendingIntent contentIntent = PendingIntent.getActivity(context, 0,
-                    new Intent(context, MainActivity.class), 0);
-            NotificationCompat.Builder mBuilder =
-                    new NotificationCompat.Builder(context)
-                            .setSmallIcon(android.R.drawable.star_on)
-                            .setContentTitle(intent.getExtras().get(Reminder.CONTENT).toString())
-                            .setContentText(intent.getExtras().get(Reminder.DATE).toString());
-            mBuilder.setContentIntent(contentIntent);
-            mBuilder.setDefaults(Notification.DEFAULT_SOUND);
-            mBuilder.setAutoCancel(true);
-            NotificationManager mNotificationManager =
-                    (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-            mNotificationManager.notify(1, mBuilder.build());
+        if(!db.isReminderExisting(reminderID)) {
+            db.updateStateToInactive(reminderID);
+            if (Session.getActiveSession().getState() == SessionState.CLOSED) {
+                Log.w(TAG, Session.getActiveSession().getState().toString());
+            } else {
+                PendingIntent contentIntent = PendingIntent.getActivity(context, 0,
+                        new Intent(context, MainActivity.class), 0);
+                NotificationCompat.Builder mBuilder =
+                        new NotificationCompat.Builder(context)
+                                .setSmallIcon(android.R.drawable.star_on)
+                                .setContentTitle(intent.getExtras().get(Reminder.CONTENT).toString())
+                                .setContentText(intent.getExtras().get(Reminder.DATE).toString());
+                mBuilder.setContentIntent(contentIntent);
+                mBuilder.setDefaults(Notification.DEFAULT_SOUND);
+                mBuilder.setAutoCancel(true);
+                NotificationManager mNotificationManager =
+                        (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+                mNotificationManager.notify(1, mBuilder.build());
+            }
         }
+        db.close();
     }
 }
