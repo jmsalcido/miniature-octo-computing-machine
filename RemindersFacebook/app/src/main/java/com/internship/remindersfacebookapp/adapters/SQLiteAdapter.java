@@ -183,4 +183,9 @@ public class SQLiteAdapter extends SQLiteOpenHelper{
         String query = "UPDATE reminders SET state=0 WHERE id="+searchedId;
         db.execSQL(query);
     }
+
+    public void deleteReminder(long reminderId){
+        SQLiteDatabase db = this.getReadableDatabase();
+        db.execSQL("DELETE FROM REMINDERS WHERE id="+reminderId);
+    }
 }
