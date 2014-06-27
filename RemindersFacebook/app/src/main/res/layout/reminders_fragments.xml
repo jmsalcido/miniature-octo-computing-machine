@@ -7,7 +7,7 @@
     <ListView
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:id="@+id/listView"
+        android:id="@android:id/list"
         android:layout_gravity="center_vertical"
         android:layout_alignParentLeft="true"
         android:layout_marginLeft="5dp"

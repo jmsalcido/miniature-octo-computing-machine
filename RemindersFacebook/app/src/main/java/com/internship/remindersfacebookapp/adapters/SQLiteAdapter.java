@@ -30,32 +30,29 @@ public class SQLiteAdapter extends SQLiteOpenHelper{
     //Table for reminders name
     private static final String TABLE_REMINDERS = "reminders";
     //Table for reminders columns
+    private static final String COLUMN_ID = "_id";
     private static final String COLUMN_CONTENT = "content";
     private static final String COLUMN_DATE = "date";
     private static final String COLUMN_USER_ID = "user_id";
     //state 0 is for inactive and 1 is for inactive.
     private static final String COLUMN_STATE = "state";
 
-    //Strings for demo header
-    private static final String EXAMPLE_CONTENT = "Example content";
-    private static final String EXAMPLE_DATE = "26 June 2014";
-
     //Querys for table creation
     private static final String CREATE_TABLE_REMINDERS_IF_NOT_EXISTS =
-            "CREATE TABLE IF NOT EXISTS reminders("+
-                    "id INTEGER PRIMARY KEY AUTOINCREMENT, "+
-                    "content TEXT, "+
-                    "date TEXT, "+
-                    "user_id TEXT,"+
-                    "state INTEGER,"+
-                    "FOREIGN KEY(user_id) REFERENCES facebook_users(user_id))";
+            "CREATE TABLE IF NOT EXISTS "+TABLE_REMINDERS+" ("+
+                    COLUMN_ID+" INTEGER PRIMARY KEY AUTOINCREMENT, "+
+                    COLUMN_CONTENT+" TEXT, "+
+                    COLUMN_DATE+" TEXT, "+
+                    COLUMN_USER_ID+" TEXT,"+
+                    COLUMN_STATE+ " INTEGER,"+
+                    "FOREIGN KEY("+COLUMN_USER_ID+") REFERENCES "+TABLE_REMINDERS_USERS+"("+COLUMN_FACEBOOK_USER_ID+"))";
 
     private static final String CREATE_TABLE_REMINDER_USER_IF_NOT_EXISTS =
-            "CREATE TABLE IF NOT EXISTS reminders_users("+
-                    "user_id INTEGER PRIMARY KEY,"+
-                    "image TEXT,"+
-                    "name TEXT,"+
-                    "mail TEXT)";
+            "CREATE TABLE IF NOT EXISTS "+TABLE_REMINDERS_USERS+" ("+
+                    COLUMN_FACEBOOK_USER_ID+" INTEGER PRIMARY KEY,"+
+                    COLUMN_IMAGE_ID+" TEXT,"+
+                    COLUMN_NAME+" TEXT,"+
+                    COLUMN_MAIL+" TEXT)";
 
     /*
      * End of variable and constants declaration.
@@ -106,7 +103,7 @@ public class SQLiteAdapter extends SQLiteOpenHelper{
 		SQLiteDatabase db = this.getReadableDatabase();
 		Cursor c = db.rawQuery("SELECT * FROM "
                 + TABLE_REMINDERS_USERS
-                +" where user_id="+ remindersUser.getUserId()
+                +" where "+COLUMN_FACEBOOK_USER_ID+"="+ remindersUser.getUserId()
                 +";"
                 ,null);
 		if(c.moveToFirst()){
@@ -125,12 +122,12 @@ public class SQLiteAdapter extends SQLiteOpenHelper{
 	public List<Reminder> selectReminder(RemindersUser remindersUser, int state){
 		String activeRemindersQuery = "SELECT * FROM "
                 +TABLE_REMINDERS
-                +" where user_id="+ remindersUser.getUserId()
-                +" AND state=1;";
+                +" where "+COLUMN_FACEBOOK_USER_ID+"="+ remindersUser.getUserId()
+                +" AND "+COLUMN_STATE+"=1;";
         String expiredRemindersQuery = "SELECT * FROM "
                 +TABLE_REMINDERS
-                +" where user_id="+ remindersUser.getUserId()
-                +" AND state=0;";
+                +" where "+COLUMN_FACEBOOK_USER_ID+"="+ remindersUser.getUserId()
+                +" AND "+COLUMN_STATE+"=0;";
 
         List<Reminder> reminderList = new ArrayList<Reminder>();
 		SQLiteDatabase db = this.getReadableDatabase();
@@ -165,7 +162,7 @@ public class SQLiteAdapter extends SQLiteOpenHelper{
     }
 
     public int selectLastReminderId(){
-        String selectQuery = "SELECT id FROM "
+        String selectQuery = "SELECT "+COLUMN_ID+" FROM "
                 +TABLE_REMINDERS+";";
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor c = db.rawQuery(selectQuery,null);
@@ -180,12 +177,7 @@ public class SQLiteAdapter extends SQLiteOpenHelper{
 
     public void updateStateToInactive(String searchedId){
         SQLiteDatabase db = this.getReadableDatabase();
-        String query = "UPDATE reminders SET state=0 WHERE id="+searchedId;
+        String query = "UPDATE "+TABLE_REMINDERS+" SET "+COLUMN_STATE+"=0 WHERE "+COLUMN_ID+"="+searchedId;
         db.execSQL(query);
-    }
-
-    public void deleteReminder(long reminderId){
-        SQLiteDatabase db = this.getReadableDatabase();
-        db.execSQL("DELETE FROM REMINDERS WHERE id="+reminderId);
     }
 }
