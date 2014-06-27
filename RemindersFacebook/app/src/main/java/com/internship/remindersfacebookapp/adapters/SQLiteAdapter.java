@@ -180,4 +180,11 @@ public class SQLiteAdapter extends SQLiteOpenHelper{
         String query = "UPDATE "+TABLE_REMINDERS+" SET "+COLUMN_STATE+"=0 WHERE "+COLUMN_ID+"="+searchedId;
         db.execSQL(query);
     }
+
+    public void deleteSelectedReminder(String content, String date){
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "DELETE FROM REMINDERS WHERE "+COLUMN_CONTENT+"='"+content+"' AND "+COLUMN_DATE+"='"+date+"'";
+        db.execSQL(query);
+
+    }
 }

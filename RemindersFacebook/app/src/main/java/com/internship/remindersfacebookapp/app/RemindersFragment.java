@@ -1,5 +1,7 @@
 package com.internship.remindersfacebookapp.app;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
@@ -34,7 +36,22 @@ private SQLiteAdapter db;
             Reminder selectedReminder;
             public boolean onItemLongClick(AdapterView<?> arg0, View v, int index, long id) {
                 selectedReminder =(Reminder) getListView().getItemAtPosition(index);
-                return false;
+                final AlertDialog.Builder b = new AlertDialog.Builder(getActivity());
+                b.setIcon(android.R.drawable.ic_dialog_info);
+                b.setMessage("What do you want to do?");
+                b.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        db.deleteSelectedReminder(selectedReminder.getContent(), selectedReminder.getDate());
+                        refreshList(mView, db);
+                    }
+                });
+                b.setNegativeButton("Edit", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        //todo
+                    }
+                });
+                b.show();
+                return true;
             }
         });
     }
