@@ -3,6 +3,7 @@ package com.internship.remindersfacebookapp.app;
 import android.app.AlertDialog;
 import android.app.PendingIntent;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
@@ -46,7 +47,13 @@ private SQLiteAdapter db;
                     }
                 }).setNegativeButton("Edit", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
-                        //todo
+                        Intent reminderActivity = new Intent(getActivity(), AddReminderActivity.class);
+                        reminderActivity.putExtra(RemindersUser.USERNAME, mRemindersUser.getName());
+                        reminderActivity.putExtra(RemindersUser.MAIL, mRemindersUser.getMail());
+                        reminderActivity.putExtra(RemindersUser.IMAGE, mRemindersUser.getImage());
+                        reminderActivity.putExtra(RemindersUser.USER_ID, mRemindersUser.getUserId());
+                        reminderActivity.putExtra(RemindersUser.FLAG,"EDIT");
+                        startActivity(reminderActivity);
                     }
                 });
                 b.show();

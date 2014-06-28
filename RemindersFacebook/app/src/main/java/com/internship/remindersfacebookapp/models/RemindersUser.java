@@ -6,6 +6,7 @@ public class RemindersUser {
 	public static String MAIL="profile_mail";
 	public static String IMAGE="profile_image";
     public static String USER_ID="user_id";
+    public static final String FLAG = "FLAG";
 	private String mName;
 	private String mMail;
 	private String mImage;

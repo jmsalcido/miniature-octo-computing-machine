@@ -177,7 +177,7 @@ public class SQLiteAdapter extends SQLiteOpenHelper{
 
     public boolean isReminderExisting(String searchedID){
         String selectQuery = "SELECT * FROM "
-                +TABLE_REMINDERS+" WHERE "+searchedID+";";
+                +TABLE_REMINDERS+" WHERE "+COLUMN_ID+"="+searchedID+";";
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor c = db.rawQuery(selectQuery,null);
         return c.moveToFirst();

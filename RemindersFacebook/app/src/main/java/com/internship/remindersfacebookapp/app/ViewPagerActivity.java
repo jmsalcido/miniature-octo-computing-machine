@@ -15,6 +15,7 @@ import com.facebook.Session;
 import com.facebook.SessionState;
 import com.internship.remindersfacebookapp.adapters.FragmentPageAdapter;
 import com.internship.remindersfacebookapp.adapters.SQLiteAdapter;
+import com.internship.remindersfacebookapp.models.Reminder;
 import com.internship.remindersfacebookapp.models.RemindersUser;
 
 import java.util.ArrayList;
@@ -87,6 +88,7 @@ public class ViewPagerActivity extends FragmentActivity implements ActionBar.Tab
 				reminderActivity.putExtra(RemindersUser.MAIL, mRemindersUser.getMail());
 				reminderActivity.putExtra(RemindersUser.IMAGE, mRemindersUser.getImage());
                 reminderActivity.putExtra(RemindersUser.USER_ID, mRemindersUser.getUserId());
+                reminderActivity.putExtra(RemindersUser.FLAG,"ADD");
 				startActivity(reminderActivity);
 				return true;
 		}

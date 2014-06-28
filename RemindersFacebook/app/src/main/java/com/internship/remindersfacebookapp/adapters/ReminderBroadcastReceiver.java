@@ -20,7 +20,7 @@ public class ReminderBroadcastReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         String reminderID=intent.getExtras().get(Reminder.ID).toString();
         SQLiteAdapter db = new SQLiteAdapter(context);
-        if(!db.isReminderExisting(reminderID)) {
+        if(db.isReminderExisting(reminderID)) {
             db.updateStateToInactive(reminderID);
             if (Session.getActiveSession().getState() == SessionState.CLOSED) {
                 Log.w(TAG, Session.getActiveSession().getState().toString());

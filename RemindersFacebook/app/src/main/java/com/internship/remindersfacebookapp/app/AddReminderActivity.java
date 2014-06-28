@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TimePicker;
@@ -25,6 +26,7 @@ public class AddReminderActivity extends Activity {
 	private RemindersUser mRemindersUser;
     private Reminder mReminder = new Reminder();
     private TimePicker mTimePicker;
+    private String mFlag = null;
     SQLiteAdapter db;
     @Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +41,11 @@ public class AddReminderActivity extends Activity {
 				extras.getString(RemindersUser.MAIL),
 				extras.getString(RemindersUser.IMAGE),
                 extras.getString(RemindersUser.USER_ID));
+        mFlag = extras.getString(RemindersUser.FLAG);
+        if (mFlag.equals("EDIT")){
+            Button button = (Button) findViewById(R.id.add_reminder_button);
+            button.setText("Save changes");
+        }
         db = new SQLiteAdapter(getApplicationContext());
 	}
 
@@ -78,9 +85,15 @@ public class AddReminderActivity extends Activity {
                 mReminder.setUserId(String.valueOf(mRemindersUser.getUserId()));
                 mReminder.setDate(reminderTime.getTime().toString());
                 mReminder.setAlarmRequestCode(db.selectLastReminderId()+1);
-                db.insertReminders(mReminder, mRemindersUser);
-                setAlarm(reminderTime, db.selectLastReminderId());
-                finish();
+                if(mFlag.equals("ADD")){
+                    db.insertReminders(mReminder, mRemindersUser);
+                    setAlarm(reminderTime, db.selectLastReminderId());
+                    finish();
+                }if(mFlag.equals("EDIT")){
+                    //db.updateReminders(mReminder, mRemindersUser);
+                    setAlarm(reminderTime, db.selectLastReminderId());
+                    finish();
+                }
             }
         }else{
             Toast.makeText(this, "Please write the reminder content!", Toast.LENGTH_SHORT).show();
