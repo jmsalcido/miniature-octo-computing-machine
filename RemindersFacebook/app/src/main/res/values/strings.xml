@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">RemindersFacebookApp</string>
+    <string name="app_name">Reminders</string>
     <string name="app_ID">539216836184145</string>
     <string name="profile_image_description">profile image view</string>
     <string name="user_name">user name</string>

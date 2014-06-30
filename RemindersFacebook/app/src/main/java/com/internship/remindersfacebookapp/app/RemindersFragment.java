@@ -47,6 +47,7 @@ private SQLiteAdapter db;
                     }
                 }).setNegativeButton("Edit", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
+                        db.deleteSelectedReminder(selectedReminder.getContent(), selectedReminder.getDate());
                         Intent reminderActivity = new Intent(getActivity(), AddReminderActivity.class);
                         reminderActivity.putExtra(RemindersUser.USERNAME, mRemindersUser.getName());
                         reminderActivity.putExtra(RemindersUser.MAIL, mRemindersUser.getMail());
@@ -57,6 +58,7 @@ private SQLiteAdapter db;
                     }
                 });
                 b.show();
+                refreshList(mView, db);
                 return true;
             }
         });

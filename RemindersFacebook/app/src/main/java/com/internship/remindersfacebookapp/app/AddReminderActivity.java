@@ -3,7 +3,6 @@ package com.internship.remindersfacebookapp.app;
 import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -85,15 +84,9 @@ public class AddReminderActivity extends Activity {
                 mReminder.setUserId(String.valueOf(mRemindersUser.getUserId()));
                 mReminder.setDate(reminderTime.getTime().toString());
                 mReminder.setAlarmRequestCode(db.selectLastReminderId()+1);
-                if(mFlag.equals("ADD")){
                     db.insertReminders(mReminder, mRemindersUser);
                     setAlarm(reminderTime, db.selectLastReminderId());
                     finish();
-                }if(mFlag.equals("EDIT")){
-                    //db.updateReminders(mReminder, mRemindersUser);
-                    setAlarm(reminderTime, db.selectLastReminderId());
-                    finish();
-                }
             }
         }else{
             Toast.makeText(this, "Please write the reminder content!", Toast.LENGTH_SHORT).show();

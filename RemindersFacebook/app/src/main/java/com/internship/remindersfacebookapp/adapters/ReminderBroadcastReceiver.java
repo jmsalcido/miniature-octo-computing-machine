@@ -37,7 +37,7 @@ public class ReminderBroadcastReceiver extends BroadcastReceiver {
                 mBuilder.setAutoCancel(true);
                 NotificationManager mNotificationManager =
                         (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-                mNotificationManager.notify(1, mBuilder.build());
+                mNotificationManager.notify(Integer.parseInt(reminderID), mBuilder.build());
             }
         }
         db.close();
