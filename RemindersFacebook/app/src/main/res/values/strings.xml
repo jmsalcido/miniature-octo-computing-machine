@@ -18,6 +18,9 @@
     <string name="reminder_date">Date:</string>
     <string name="title_activity_reminder_view">ReminderView</string>
     <string name="hello_world">Hello world!</string>
+    <string name="gLogin">G+ Login</string>
     <string name="action_settings">Settings</string>
+    <string name="btn_logout_from_google">Logout from Google</string>
+    <string name="btn_revoke_access">Revoke Access</string>
 
 </resources>
