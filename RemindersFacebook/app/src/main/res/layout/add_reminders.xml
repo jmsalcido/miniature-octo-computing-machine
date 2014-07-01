@@ -24,33 +24,26 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"/>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="@string/reminder_date"
-        android:id="@+id/reminder_date"
-        android:layout_below="@+id/reminder_editName"
-        android:layout_centerHorizontal="true"/>
-
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/add_reminder_button_text"
         android:id="@+id/add_reminder_button"
+        android:onClick="AddReminder"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_alignRight="@+id/reminder_editName"
-        android:onClick="AddReminder"
-        android:layout_alignEnd="@+id/reminder_editName"/>
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:visibility="invisible" />
 
     <TimePicker
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/timePicker"
         android:layout_below="@+id/datePicker"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:visibility="invisible" />
 
     <DatePicker
         android:layout_width="wrap_content"
@@ -59,6 +52,19 @@
         android:calendarViewShown="false"
         android:layout_below="@+id/reminder_editName"
         android:layout_alignRight="@+id/timePicker"
-        android:layout_alignEnd="@+id/timePicker" />
+        android:layout_alignEnd="@+id/timePicker"
+        android:visibility="invisible" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Add text"
+        android:onClick="ShowElements"
+        android:id="@+id/button_show"
+        android:layout_alignTop="@+id/add_reminder_button"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
 
 </RelativeLayout>

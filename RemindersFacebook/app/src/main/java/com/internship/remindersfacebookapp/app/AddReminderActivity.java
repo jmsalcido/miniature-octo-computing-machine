@@ -26,6 +26,8 @@ public class AddReminderActivity extends Activity {
     private Reminder mReminder = new Reminder();
     private TimePicker mTimePicker;
     private String mFlag = null;
+    private Button mButtonAdd;
+    private Button mButtonShow;
     Bundle mExtras;
     SQLiteAdapter db;
     @Override
@@ -36,6 +38,8 @@ public class AddReminderActivity extends Activity {
 		mDatePicker = (DatePicker) findViewById(R.id.datePicker);
         mTimePicker = (TimePicker) findViewById(R.id.timePicker);
 		mExtras = getIntent().getExtras();
+        mButtonShow = (Button) findViewById(R.id.button_show);
+        mButtonAdd = (Button) findViewById(R.id.add_reminder_button);
 		mRemindersUser = new RemindersUser(
 				mExtras.getString(RemindersUser.USERNAME),
 				mExtras.getString(RemindersUser.MAIL),
@@ -43,8 +47,7 @@ public class AddReminderActivity extends Activity {
                 mExtras.getString(RemindersUser.USER_ID));
         mFlag = mExtras.getString(RemindersUser.FLAG);
         if (mFlag.equals("EDIT")){
-            Button button = (Button) findViewById(R.id.add_reminder_button);
-            button.setText("Save changes");
+            mButtonAdd.setText("Save changes");
         }
         db = new SQLiteAdapter(getApplicationContext());
 	}
@@ -94,6 +97,19 @@ public class AddReminderActivity extends Activity {
             Toast.makeText(this, "Please write the reminder content!", Toast.LENGTH_SHORT).show();
         }
 
+    }
+
+    public void ShowElements(View view){
+        if(mContentText.getText().toString().trim().length()>0) {
+            mContentText.setVisibility(View.INVISIBLE);
+            mButtonShow.setVisibility(View.INVISIBLE);
+            mButtonAdd.setVisibility(View.VISIBLE);
+            mDatePicker.setVisibility(View.VISIBLE);
+            mTimePicker.setVisibility(View.VISIBLE);
+            Toast.makeText(this, "Now select the hour and date", Toast.LENGTH_SHORT).show();
+        }else{
+            Toast.makeText(this, "Please write the reminder content!", Toast.LENGTH_SHORT).show();
+        }
     }
 
     public void setAlarm(Calendar calendar, int requestCode){
