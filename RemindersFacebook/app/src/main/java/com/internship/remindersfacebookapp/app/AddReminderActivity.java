@@ -3,9 +3,11 @@ package com.internship.remindersfacebookapp.app;
 import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -47,6 +49,7 @@ public class AddReminderActivity extends Activity {
                 mExtras.getString(RemindersUser.USER_ID));
         mFlag = mExtras.getString(RemindersUser.FLAG);
         if (mFlag.equals("EDIT")){
+            mButtonShow.setText("Change content");
             mButtonAdd.setText("Save changes");
         }
         db = new SQLiteAdapter(getApplicationContext());
@@ -106,6 +109,10 @@ public class AddReminderActivity extends Activity {
             mButtonAdd.setVisibility(View.VISIBLE);
             mDatePicker.setVisibility(View.VISIBLE);
             mTimePicker.setVisibility(View.VISIBLE);
+            InputMethodManager inputManager = (InputMethodManager)
+                    getSystemService(Context.INPUT_METHOD_SERVICE);
+            inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),
+                    InputMethodManager.HIDE_NOT_ALWAYS);
             Toast.makeText(this, "Now select the hour and date", Toast.LENGTH_SHORT).show();
         }else{
             Toast.makeText(this, "Please write the reminder content!", Toast.LENGTH_SHORT).show();

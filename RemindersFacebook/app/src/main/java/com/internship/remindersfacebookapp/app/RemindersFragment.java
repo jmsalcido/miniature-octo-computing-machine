@@ -83,11 +83,16 @@ private SQLiteAdapter db;
     }
 
     @Override
+    public void onPause() {
+        super.onPause();
+        refreshList(mView,db);
+    }
+
+    @Override
     public void onResume() {
         //db.deleteAllReminders();
-        refreshList(mView,db);
         super.onResume();
-
+        refreshList(mView,db);
     }
 
     public void refreshList(View view, SQLiteAdapter db){
