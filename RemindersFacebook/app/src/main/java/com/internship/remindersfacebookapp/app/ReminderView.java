@@ -1,6 +1,5 @@
 package com.internship.remindersfacebookapp.app;
 
-import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -17,7 +16,7 @@ public class ReminderView extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         String content;
         String date;
-        setContentView(R.layout.activity_reminder_view);
+        setContentView(R.layout.reminder_view);
         content=getIntent().getStringExtra(Reminder.CONTENT);
         date=getIntent().getStringExtra(Reminder.DATE);
         TextView contentTextView = (TextView) findViewById(R.id.content_text_view);

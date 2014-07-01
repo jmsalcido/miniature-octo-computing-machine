@@ -26,6 +26,7 @@ public class AddReminderActivity extends Activity {
     private Reminder mReminder = new Reminder();
     private TimePicker mTimePicker;
     private String mFlag = null;
+    Bundle mExtras;
     SQLiteAdapter db;
     @Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -34,13 +35,13 @@ public class AddReminderActivity extends Activity {
 		mContentText = (EditText) findViewById(R.id.reminder_editName);
 		mDatePicker = (DatePicker) findViewById(R.id.datePicker);
         mTimePicker = (TimePicker) findViewById(R.id.timePicker);
-		Bundle extras = getIntent().getExtras();
+		mExtras = getIntent().getExtras();
 		mRemindersUser = new RemindersUser(
-				extras.getString(RemindersUser.USERNAME),
-				extras.getString(RemindersUser.MAIL),
-				extras.getString(RemindersUser.IMAGE),
-                extras.getString(RemindersUser.USER_ID));
-        mFlag = extras.getString(RemindersUser.FLAG);
+				mExtras.getString(RemindersUser.USERNAME),
+				mExtras.getString(RemindersUser.MAIL),
+				mExtras.getString(RemindersUser.IMAGE),
+                mExtras.getString(RemindersUser.USER_ID));
+        mFlag = mExtras.getString(RemindersUser.FLAG);
         if (mFlag.equals("EDIT")){
             Button button = (Button) findViewById(R.id.add_reminder_button);
             button.setText("Save changes");
@@ -79,6 +80,7 @@ public class AddReminderActivity extends Activity {
             if(currentTime.getTimeInMillis()>=reminderTime.getTimeInMillis()){
                 Toast.makeText(this, "Please select a future date", Toast.LENGTH_SHORT).show();
             }else{
+                db.deleteSelectedReminder(mExtras.getString(Reminder.CONTENT),mExtras.getString(Reminder.DATE));
                 mReminder.setState(1);
                 mReminder.setContent(mContentText.getText().toString());
                 mReminder.setUserId(String.valueOf(mRemindersUser.getUserId()));
