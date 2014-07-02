@@ -2,6 +2,7 @@ package com.internship.remindersfacebookapp.models;
 
 
 public class RemindersUser {
+    public static boolean IS_FB_USER;
 	public static String USERNAME="profile_name";
 	public static String MAIL="profile_mail";
 	public static String IMAGE="profile_image";
