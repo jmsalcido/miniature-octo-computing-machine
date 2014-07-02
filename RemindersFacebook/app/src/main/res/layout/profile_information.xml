@@ -46,7 +46,6 @@
         android:layout_height="wrap_content"
         android:id="@+id/imageView"
         android:layout_above="@+id/profile_name"
-        android:layout_centerHorizontal="true"
-        android:contentDescription="googleimage" />
+        android:layout_centerHorizontal="true" />
 
 </RelativeLayout>

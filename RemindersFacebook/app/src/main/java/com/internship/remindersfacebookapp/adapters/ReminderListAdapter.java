@@ -12,7 +12,7 @@ import com.internship.remindersfacebookapp.models.Reminder;
 import com.internship.remindersfacebookapp.models.ViewHolder;
 
 import java.util.List;
-
+//THIS CLASS MAY BE NO LONGER USED
 public class ReminderListAdapter extends BaseAdapter{
 private List<Reminder> reminderList;
 private Context mContext;

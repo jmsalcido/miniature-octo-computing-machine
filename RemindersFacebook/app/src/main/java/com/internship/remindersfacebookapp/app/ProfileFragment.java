@@ -2,6 +2,7 @@ package com.internship.remindersfacebookapp.app;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,7 +30,7 @@ protected static int BUNDLE_SIZE = 1;
 	public void onResume() {
 		super.onResume();
 		if (Session.getActiveSession().isClosed()) {
-			getActivity().finish();
+            getActivity().finish();
 		}
 	}
 
@@ -40,11 +41,12 @@ protected static int BUNDLE_SIZE = 1;
 		RemindersUser remindersUser = new RemindersUser(
 				extras.getString(RemindersUser.USERNAME),
 				extras.getString(RemindersUser.MAIL),
-                extras.getString(RemindersUser.IMAGE),
-				extras.getString(RemindersUser.USER_ID));
-        if(RemindersUser.IS_FB_OR_G==0){
+				extras.getString(RemindersUser.IMAGE),
+                extras.getString(RemindersUser.USER_ID));
+
+        if(RemindersUser.IS_FB_USER){
             ProfilePictureView mProfilePicture = (ProfilePictureView) view.findViewById(R.id.profile_picture);
-            mProfilePicture.setProfileId(String.valueOf(remindersUser.getUserId()));
+            mProfilePicture.setProfileId(remindersUser.getImage());
         }else{
             ImageView mImageView = (ImageView) view.findViewById(R.id.imageView);
             new LoadProfileImage(mImageView).execute(remindersUser.getImage());
@@ -52,7 +54,6 @@ protected static int BUNDLE_SIZE = 1;
 
 		TextView mUserMail = (TextView) view.findViewById(R.id.profile_mail);
 		TextView mUserName = (TextView) view.findViewById(R.id.profile_name);
-
 
 		 mUserName.setText(remindersUser.getName());
 		 mUserMail.setText(remindersUser.getMail());
