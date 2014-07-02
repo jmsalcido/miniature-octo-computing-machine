@@ -15,7 +15,6 @@ import com.facebook.Session;
 import com.facebook.SessionState;
 import com.internship.remindersfacebookapp.adapters.FragmentPageAdapter;
 import com.internship.remindersfacebookapp.adapters.SQLiteAdapter;
-import com.internship.remindersfacebookapp.models.Reminder;
 import com.internship.remindersfacebookapp.models.RemindersUser;
 
 import java.util.ArrayList;
@@ -67,16 +66,22 @@ public class ViewPagerActivity extends FragmentActivity implements ActionBar.Tab
             }
         });
 		SQLiteAdapter db = new SQLiteAdapter(getApplicationContext());
-		db.insertFacebookUser(mRemindersUser);
-		db.selectFacebookUser(mRemindersUser);
+		db.insertUser(mRemindersUser);
+		db.selectUser(mRemindersUser);
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
-		if(Session.getActiveSession().getState() == SessionState.CLOSED){
-			this.finish();
-		}
+        if(RemindersUser.IS_FB_USER){
+            if(Session.getActiveSession().getState() == SessionState.CLOSED){
+                this.finish();
+            }
+        }else{
+            if (!LoginFragment.mGoogleApiClient.isConnected()) {
+                this.finish();
+            }
+        }
 	}
 
 	@Override

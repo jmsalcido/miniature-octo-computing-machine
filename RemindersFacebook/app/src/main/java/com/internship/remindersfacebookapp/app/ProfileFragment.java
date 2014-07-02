@@ -11,7 +11,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.facebook.Session;
+import com.facebook.SessionState;
 import com.facebook.widget.ProfilePictureView;
+import com.google.android.gms.plus.Plus;
 import com.internship.remindersfacebookapp.adapters.LoadProfileImage;
 import com.internship.remindersfacebookapp.models.RemindersUser;
 
@@ -27,16 +29,9 @@ protected static int BUNDLE_SIZE = 1;
     }
 
 	@Override
-	public void onResume() {
-		super.onResume();
-		if (Session.getActiveSession().isClosed()) {
-            getActivity().finish();
-		}
-	}
-
-	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
-		View view = inflater.inflate(R.layout.profile_information, container, false);
+		LoginFragment.mGoogleApiClient.connect();
+        View view = inflater.inflate(R.layout.profile_information, container, false);
 		Bundle extras = getActivity().getIntent().getExtras();
 		RemindersUser remindersUser = new RemindersUser(
 				extras.getString(RemindersUser.USERNAME),
@@ -62,10 +57,18 @@ protected static int BUNDLE_SIZE = 1;
 	    mButtonLogout.setOnClickListener(new View.OnClickListener() {
 		    @Override
 		    public void onClick(View v) {
-			    if (!Session.getActiveSession().isClosed()) {
-				    Session.getActiveSession().closeAndClearTokenInformation();
-				    onResume();
-			    }
+                if(RemindersUser.IS_FB_USER){
+                    if (!Session.getActiveSession().isClosed()) {
+                        Session.getActiveSession().closeAndClearTokenInformation();
+                        getActivity().finish();
+                    }
+                }else{
+                    if (LoginFragment.mGoogleApiClient.isConnected()) {
+                        Plus.AccountApi.clearDefaultAccount(LoginFragment.mGoogleApiClient);
+                        LoginFragment.mGoogleApiClient.disconnect();
+                        getActivity().finish();
+                    }
+                }
 		    }
 	    });
 	    return view;
