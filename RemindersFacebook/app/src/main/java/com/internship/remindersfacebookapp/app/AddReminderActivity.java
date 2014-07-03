@@ -89,7 +89,7 @@ public class AddReminderActivity extends Activity {
                 db.deleteSelectedReminder(mExtras.getString(Reminder.CONTENT),mExtras.getString(Reminder.DATE));
                 mReminder.setState(1);
                 mReminder.setContent(mContentText.getText().toString());
-                mReminder.setUserId(String.valueOf(mRemindersUser.getUserId()));
+                mReminder.setUserId(mRemindersUser.getUserId());
                 mReminder.setDate(reminderTime.getTime().toString());
                 mReminder.setAlarmRequestCode(db.selectLastReminderId()+1);
                     db.insertReminders(mReminder, mRemindersUser);
@@ -99,7 +99,6 @@ public class AddReminderActivity extends Activity {
         }else{
             Toast.makeText(this, "Please write the reminder content!", Toast.LENGTH_SHORT).show();
         }
-
     }
 
     public void ShowElements(View view){

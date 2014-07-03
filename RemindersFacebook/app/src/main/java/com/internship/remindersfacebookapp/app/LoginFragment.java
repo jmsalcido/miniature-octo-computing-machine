@@ -33,6 +33,7 @@ import java.util.Arrays;
 public class LoginFragment extends Fragment implements OnClickListener,ConnectionCallbacks, OnConnectionFailedListener{
 	RemindersUser mRemindersUser;
 	private static final String TAG = "MainFragment";
+    private LoginButton FacebookLoginButton;
 	private Session.StatusCallback callback = new Session.StatusCallback() {
 		@Override
 		public void call(Session session, SessionState state, Exception exception) {
@@ -43,21 +44,21 @@ public class LoginFragment extends Fragment implements OnClickListener,Connectio
     //G+ Login variables
 	private UiLifecycleHelper uiHelper;
     private static final int RC_SIGN_IN = 0;
-    private static final int PROFILE_PIC_SIZE = 400;
-    private GoogleApiClient mGoogleApiClient;
+    private static final int PROFILE_PIC_SIZE = 200;
+    public static GoogleApiClient mGoogleApiClient;
     private boolean mIntentInProgress;
     private boolean mSignInClicked;
     private ConnectionResult mConnectionResult;
-    private SignInButton btnSignIn;
+    private SignInButton GoogleLoginButton;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.activity_main, container, false);
-        btnSignIn = (SignInButton) view.findViewById(R.id.btn_sign_in);
-        btnSignIn.setOnClickListener(this);
-		LoginButton loginButton = (LoginButton) view.findViewById(R.id.loginButton);
-		loginButton.setFragment(this);
-		loginButton.setReadPermissions(Arrays.asList("email","public_profile"));
+        GoogleLoginButton = (SignInButton) view.findViewById(R.id.btn_sign_in);
+        GoogleLoginButton.setOnClickListener(this);
+		FacebookLoginButton = (LoginButton) view.findViewById(R.id.loginButton);
+		FacebookLoginButton.setFragment(this);
+		FacebookLoginButton.setReadPermissions(Arrays.asList("email", "public_profile"));
         mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this).addApi(Plus.API)
@@ -73,22 +74,14 @@ public class LoginFragment extends Fragment implements OnClickListener,Connectio
 	}
 
     @Override
-    public void onStop() {
-        super.onStop();
-        if (mGoogleApiClient.isConnected()) {
-            mGoogleApiClient.disconnect();
-        }
-    }
-
-    @Override
 	public void onResume() {
 		super.onResume();
+        uiHelper.onResume();
 		Session session = Session.getActiveSession();
 		if (session != null &&
 				(session.isOpened() || session.isClosed()) ) {
 			onSessionStateChange(session, session.getState(), null);
 		}
-		uiHelper.onResume();
 	}
 
 	@Override
@@ -107,6 +100,9 @@ public class LoginFragment extends Fragment implements OnClickListener,Connectio
 	public void onDestroy() {
 		super.onDestroy();
 		Session.getActiveSession().closeAndClearTokenInformation();
+        if (mGoogleApiClient.isConnected()) {
+            mGoogleApiClient.disconnect();
+        }
 		uiHelper.onDestroy();
 	}
 
@@ -125,6 +121,7 @@ public class LoginFragment extends Fragment implements OnClickListener,Connectio
     private void onSessionStateChange(Session session, SessionState state, Exception exception) {
 		Log.i(TAG, "Logged in...");
 		if (state.isOpened()) {
+            RemindersUser.IS_FB_USER =true;
 			Request.newMeRequest(session, new Request.GraphUserCallback() {
 				// callback after Graph API response with user object
 				@Override
@@ -140,7 +137,6 @@ public class LoginFragment extends Fragment implements OnClickListener,Connectio
 						viewPagerIntent.putExtra(RemindersUser.MAIL, mRemindersUser.getMail());
 						viewPagerIntent.putExtra(RemindersUser.IMAGE, mRemindersUser.getImage());
                         viewPagerIntent.putExtra(RemindersUser.USER_ID, mRemindersUser.getUserId());
-                        RemindersUser.IS_FB_USER =true;
 						startActivity(viewPagerIntent);
 					}
 				}

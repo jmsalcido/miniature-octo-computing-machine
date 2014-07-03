@@ -17,16 +17,19 @@ public class SQLiteAdapter extends SQLiteOpenHelper{
     //Constant and variables declaration
 	private static final String TAG = "SQL";
 	private static final int DATABASE_VERSION=1;
-	private static String DATABASE_NAME="ReminderDB";
-
     //Table for users name
     private static final String TABLE_REMINDERS_USERS = "reminders_users";
     //Table for users columns
-    private static final String COLUMN_FACEBOOK_USER_ID = "user_id";
+    private static final String COLUMN_REMINDER_USER_ID = "user_id";
     private static final String COLUMN_IMAGE_ID= "image";
     private static final String COLUMN_NAME= "name";
     private static final String COLUMN_MAIL = "mail";
-
+    private static final String CREATE_TABLE_REMINDER_USER_IF_NOT_EXISTS =
+            "CREATE TABLE IF NOT EXISTS "+TABLE_REMINDERS_USERS+" ("+
+                    COLUMN_REMINDER_USER_ID +" TEXT PRIMARY KEY,"+
+                    COLUMN_IMAGE_ID+" TEXT,"+
+                    COLUMN_NAME+" TEXT,"+
+                    COLUMN_MAIL+" TEXT)";
     //Table for reminders name
     private static final String TABLE_REMINDERS = "reminders";
     //Table for reminders columns
@@ -45,14 +48,8 @@ public class SQLiteAdapter extends SQLiteOpenHelper{
                     COLUMN_DATE+" TEXT, "+
                     COLUMN_USER_ID+" TEXT,"+
                     COLUMN_STATE+ " INTEGER,"+
-                    "FOREIGN KEY("+COLUMN_USER_ID+") REFERENCES "+TABLE_REMINDERS_USERS+"("+COLUMN_FACEBOOK_USER_ID+"))";
-
-    private static final String CREATE_TABLE_REMINDER_USER_IF_NOT_EXISTS =
-            "CREATE TABLE IF NOT EXISTS "+TABLE_REMINDERS_USERS+" ("+
-                    COLUMN_FACEBOOK_USER_ID+" INTEGER PRIMARY KEY,"+
-                    COLUMN_IMAGE_ID+" TEXT,"+
-                    COLUMN_NAME+" TEXT,"+
-                    COLUMN_MAIL+" TEXT)";
+                    "FOREIGN KEY("+COLUMN_USER_ID+") REFERENCES "+TABLE_REMINDERS_USERS+"("+ COLUMN_REMINDER_USER_ID +"))";
+	private static String DATABASE_NAME="ReminderDB";
 
     /*
      * End of variable and constants declaration.
@@ -86,11 +83,11 @@ public class SQLiteAdapter extends SQLiteOpenHelper{
 	}
 
 
-	public void insertFacebookUser(RemindersUser remindersUser){
+	public void insertUser(RemindersUser remindersUser){
 		SQLiteDatabase db = this.getWritableDatabase();
-
+        Log.w(TAG, remindersUser.getUserId()+"/"+remindersUser.getImage()+"/"+remindersUser.getName()+"/"+remindersUser.getMail());
 		ContentValues values = new ContentValues();
-		values.put(COLUMN_FACEBOOK_USER_ID, remindersUser.getUserId());
+		values.put(COLUMN_REMINDER_USER_ID, remindersUser.getUserId());
 		values.put(COLUMN_IMAGE_ID, remindersUser.getImage());
 		values.put(COLUMN_NAME, remindersUser.getName());
 		values.put(COLUMN_MAIL, remindersUser.getMail());
@@ -99,11 +96,11 @@ public class SQLiteAdapter extends SQLiteOpenHelper{
 	}
 
 
-	public void selectFacebookUser(RemindersUser remindersUser){
+	public void selectUser(RemindersUser remindersUser){
 		SQLiteDatabase db = this.getReadableDatabase();
 		Cursor c = db.rawQuery("SELECT * FROM "
                 + TABLE_REMINDERS_USERS
-                +" where "+COLUMN_FACEBOOK_USER_ID+"="+ remindersUser.getUserId()
+                +" where "+ COLUMN_REMINDER_USER_ID +"="+ remindersUser.getUserId()
                 +";"
                 ,null);
 		if(c.moveToFirst()){
@@ -122,11 +119,11 @@ public class SQLiteAdapter extends SQLiteOpenHelper{
 	public List<Reminder> selectReminder(RemindersUser remindersUser, int state){
 		String activeRemindersQuery = "SELECT * FROM "
                 +TABLE_REMINDERS
-                +" where "+COLUMN_FACEBOOK_USER_ID+"="+ remindersUser.getUserId()
+                +" where "+ COLUMN_REMINDER_USER_ID +"="+ remindersUser.getUserId()
                 +" AND "+COLUMN_STATE+"=1;";
         String expiredRemindersQuery = "SELECT * FROM "
                 +TABLE_REMINDERS
-                +" where "+COLUMN_FACEBOOK_USER_ID+"="+ remindersUser.getUserId()
+                +" where "+ COLUMN_REMINDER_USER_ID +"="+ remindersUser.getUserId()
                 +" AND "+COLUMN_STATE+"=0;";
 
         List<Reminder> reminderList = new ArrayList<Reminder>();
