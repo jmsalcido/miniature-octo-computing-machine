@@ -26,7 +26,7 @@ public class SQLiteAdapter extends SQLiteOpenHelper{
     private static final String COLUMN_MAIL = "mail";
     private static final String CREATE_TABLE_REMINDER_USER_IF_NOT_EXISTS =
             "CREATE TABLE IF NOT EXISTS "+TABLE_REMINDERS_USERS+" ("+
-                    COLUMN_REMINDER_USER_ID +" LONG PRIMARY KEY,"+
+                    COLUMN_REMINDER_USER_ID +" TEXT PRIMARY KEY,"+
                     COLUMN_IMAGE_ID+" TEXT,"+
                     COLUMN_NAME+" TEXT,"+
                     COLUMN_MAIL+" TEXT)";

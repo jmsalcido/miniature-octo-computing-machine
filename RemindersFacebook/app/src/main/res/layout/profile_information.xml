@@ -36,10 +36,11 @@
         android:layout_height="wrap_content"
         android:text="@string/logout_button_text"
         android:id="@+id/logoutButton"
-        android:background="@color/com_facebook_blue"
-        android:textColor="#FFFFFF"
         android:layout_below="@+id/profile_mail"
-        android:layout_centerHorizontal="true"/>
+        android:layout_alignRight="@+id/profile_name"
+        android:layout_alignEnd="@+id/profile_name"
+        android:layout_alignLeft="@+id/profile_mail"
+        android:layout_alignStart="@+id/profile_mail" />
 
     <ImageView
         android:layout_width="wrap_content"

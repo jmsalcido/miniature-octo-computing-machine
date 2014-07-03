@@ -27,7 +27,7 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="@string/welcome_message"
-        android:id="@+id/reminder_content"
+        android:id="@+id/login_textView"
         android:layout_above="@+id/loginButton"
         android:layout_centerHorizontal="true"/>
 

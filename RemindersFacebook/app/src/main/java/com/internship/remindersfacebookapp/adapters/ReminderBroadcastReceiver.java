@@ -22,34 +22,27 @@ public class ReminderBroadcastReceiver extends BroadcastReceiver {
     private String mContent;
     private String mDate;
     private String mReminderID;
+
     @Override
     public void onReceive(Context context, Intent intent) {
-        mContent =intent.getExtras().get(Reminder.CONTENT).toString();
-        mDate =intent.getExtras().get(Reminder.DATE).toString();
-        mReminderID =intent.getExtras().get(Reminder.ID).toString();
+        mContent = intent.getExtras().get(Reminder.CONTENT).toString();
+        mDate = intent.getExtras().get(Reminder.DATE).toString();
+        mReminderID = intent.getExtras().get(Reminder.ID).toString();
         SQLiteAdapter db = new SQLiteAdapter(context);
 
-        if(db.isReminderExisting(mReminderID)) {
+        if (db.isReminderExisting(mReminderID)) {
             db.updateStateToInactive(mReminderID);
-            if (RemindersUser.IS_FB_USER) {
-                if (Session.getActiveSession().getState() == SessionState.CLOSED) {
-                    Log.w(TAG, Session.getActiveSession().getState().toString());
-                } else {
-                    createNotification(context);
-                }
-            }else{
-                if (!LoginFragment.mGoogleApiClient.isConnected()) {
-                    Log.w(TAG, String.valueOf(LoginFragment.mGoogleApiClient.isConnected()));
-                } else {
-                    createNotification(context);
-                }
+            if (Session.getActiveSession().getState() == SessionState.CLOSED
+                    && !LoginFragment.mGoogleApiClient.isConnected()) {
+                Log.w(TAG, Session.getActiveSession().getState().toString());
+            } else {
+                createNotification(context);
             }
-
         }
         db.close();
     }
 
-    private void createNotification(Context context){
+    private void createNotification(Context context) {
         Intent notificationIntent = new Intent(context, ReminderView.class);
         notificationIntent.putExtra(Reminder.CONTENT, mContent);
         notificationIntent.putExtra(Reminder.DATE, mDate);

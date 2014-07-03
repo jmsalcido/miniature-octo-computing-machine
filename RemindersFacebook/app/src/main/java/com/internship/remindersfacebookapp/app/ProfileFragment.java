@@ -20,6 +20,18 @@ import com.internship.remindersfacebookapp.models.RemindersUser;
 
 public class ProfileFragment extends Fragment {
 protected static int BUNDLE_SIZE = 1;
+private ImageView mImageView;
+    @Override
+    public void onStop() {
+        super.onStop();
+        mImageView = null;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mImageView = (ImageView) getActivity().findViewById(R.id.imageView);
+    }
 
     public static final ProfileFragment newInstance() {
         ProfileFragment profileFragment = new ProfileFragment();
@@ -43,7 +55,7 @@ protected static int BUNDLE_SIZE = 1;
             ProfilePictureView mProfilePicture = (ProfilePictureView) view.findViewById(R.id.profile_picture);
             mProfilePicture.setProfileId(remindersUser.getImage());
         }else{
-            ImageView mImageView = (ImageView) view.findViewById(R.id.imageView);
+            mImageView = (ImageView) view.findViewById(R.id.imageView);
             new LoadProfileImage(mImageView).execute(remindersUser.getImage());
         }
 
