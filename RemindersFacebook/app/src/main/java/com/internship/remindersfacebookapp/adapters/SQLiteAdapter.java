@@ -119,8 +119,8 @@ public class SQLiteAdapter extends SQLiteOpenHelper{
 	public List<Reminder> selectReminder(RemindersUser remindersUser, int state){
 		String activeRemindersQuery = "SELECT * FROM "
                 +TABLE_REMINDERS
-                +" where "+ COLUMN_REMINDER_USER_ID +"="+ remindersUser.getUserId()
-                +" AND "+COLUMN_STATE+"=1;";
+                +" where "+ COLUMN_REMINDER_USER_ID +"='"+ remindersUser.getUserId()
+                +"' AND "+COLUMN_STATE+"=1;";
         String expiredRemindersQuery = "SELECT * FROM "
                 +TABLE_REMINDERS
                 +" where "+ COLUMN_REMINDER_USER_ID +"="+ remindersUser.getUserId()
