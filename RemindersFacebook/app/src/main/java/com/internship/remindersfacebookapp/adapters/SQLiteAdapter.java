@@ -123,8 +123,8 @@ public class SQLiteAdapter extends SQLiteOpenHelper{
                 +"' AND "+COLUMN_STATE+"=1;";
         String expiredRemindersQuery = "SELECT * FROM "
                 +TABLE_REMINDERS
-                +" where "+ COLUMN_REMINDER_USER_ID +"="+ remindersUser.getUserId()
-                +" AND "+COLUMN_STATE+"=0;";
+                +" where "+ COLUMN_REMINDER_USER_ID +"='"+ remindersUser.getUserId()
+                +"' AND "+COLUMN_STATE+"=0;";
 
         List<Reminder> reminderList = new ArrayList<Reminder>();
 		SQLiteDatabase db = this.getReadableDatabase();
