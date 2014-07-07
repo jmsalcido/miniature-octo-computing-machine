@@ -11,11 +11,10 @@ import android.util.Log;
 
 import com.facebook.Session;
 import com.facebook.SessionState;
-import com.internship.remindersfacebookapp.app.LoginFragment;
+import com.internship.remindersfacebookapp.app.MainActivity;
 import com.internship.remindersfacebookapp.app.R;
 import com.internship.remindersfacebookapp.app.ReminderView;
 import com.internship.remindersfacebookapp.models.Reminder;
-import com.internship.remindersfacebookapp.models.RemindersUser;
 
 public class ReminderBroadcastReceiver extends BroadcastReceiver {
     private static final String TAG = "BROADCAST_RECEIVER";
@@ -33,7 +32,7 @@ public class ReminderBroadcastReceiver extends BroadcastReceiver {
         if (db.isReminderExisting(mReminderID)) {
             db.updateStateToInactive(mReminderID);
             if (Session.getActiveSession().getState() == SessionState.CLOSED
-                    && !LoginFragment.mGoogleApiClient.isConnected()) {
+                    && !MainActivity.mGoogleApiClient.isConnected()) {
                 Log.w(TAG, Session.getActiveSession().getState().toString());
             } else {
                 createNotification(context);
@@ -51,10 +50,10 @@ public class ReminderBroadcastReceiver extends BroadcastReceiver {
                 new NotificationCompat.Builder(context)
                         .setSmallIcon(R.drawable.ic_launcher)
                         .setContentTitle(mContent)
-                        .setContentText(mDate);
-        mBuilder.setContentIntent(contentIntent);
-        mBuilder.setDefaults(Notification.DEFAULT_SOUND);
-        mBuilder.setAutoCancel(true);
+                        .setContentText(mDate)
+                        .setContentIntent(contentIntent)
+                        .setDefaults(Notification.DEFAULT_SOUND)
+                        .setAutoCancel(true);
         NotificationManager mNotificationManager =
                 (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         mNotificationManager.notify(Integer.parseInt(mReminderID), mBuilder.build());

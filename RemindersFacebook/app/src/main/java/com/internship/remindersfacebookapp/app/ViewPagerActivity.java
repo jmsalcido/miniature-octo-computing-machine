@@ -80,7 +80,7 @@ public class ViewPagerActivity extends FragmentActivity implements ActionBar.Tab
                 this.finish();
             }
         }else{
-            if (!LoginFragment.mGoogleApiClient.isConnected()) {
+            if (!MainActivity.mGoogleApiClient.isConnected()) {
                 this.finish();
             }
         }
