@@ -88,6 +88,7 @@ public class LoginFragment extends Fragment implements OnClickListener,Connectio
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		uiHelper.onActivityResult(requestCode, resultCode, data);
+
 	}
 
 	@Override
@@ -132,12 +133,12 @@ public class LoginFragment extends Fragment implements OnClickListener,Connectio
 								user.getProperty("email").toString(),
 								user.getId(),
                                 user.getId());
-						Intent viewPagerIntent = new Intent(getActivity().getApplicationContext(), ViewPagerActivity.class);
-						viewPagerIntent.putExtra(RemindersUser.USERNAME, mRemindersUser.getName());
-						viewPagerIntent.putExtra(RemindersUser.MAIL, mRemindersUser.getMail());
-						viewPagerIntent.putExtra(RemindersUser.IMAGE, mRemindersUser.getImage());
+                        Intent viewPagerIntent = new Intent(getActivity(), ViewPagerActivity.class);
+                        viewPagerIntent.putExtra(RemindersUser.USERNAME, mRemindersUser.getName());
+                        viewPagerIntent.putExtra(RemindersUser.MAIL, mRemindersUser.getMail());
+                        viewPagerIntent.putExtra(RemindersUser.IMAGE, mRemindersUser.getImage());
                         viewPagerIntent.putExtra(RemindersUser.USER_ID, mRemindersUser.getUserId());
-						startActivity(viewPagerIntent);
+                        startActivity(viewPagerIntent);
 					}
 				}
 			}).executeAsync();
@@ -181,7 +182,7 @@ public class LoginFragment extends Fragment implements OnClickListener,Connectio
                         email,
                         personPhotoUrl,
                         personGooglePlusId);
-                Intent viewPagerIntent = new Intent(getActivity().getApplicationContext(), ViewPagerActivity.class);
+                Intent viewPagerIntent = new Intent(getActivity(), ViewPagerActivity.class);
                 viewPagerIntent.putExtra(RemindersUser.USERNAME, mRemindersUser.getName());
                 viewPagerIntent.putExtra(RemindersUser.MAIL, mRemindersUser.getMail());
                 viewPagerIntent.putExtra(RemindersUser.IMAGE, mRemindersUser.getImage());

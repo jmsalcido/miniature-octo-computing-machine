@@ -11,6 +11,8 @@ import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.Toast;
+
 import com.facebook.Session;
 import com.facebook.SessionState;
 import com.internship.remindersfacebookapp.adapters.FragmentPageAdapter;
@@ -131,5 +133,9 @@ public class ViewPagerActivity extends FragmentActivity implements ActionBar.Tab
     @Override
     public void onTabReselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
 
+    }
+    @Override
+    public void onBackPressed() {
+        Toast.makeText(this, "Please logout to go back", Toast.LENGTH_LONG).show();
     }
 }
