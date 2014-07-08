@@ -123,6 +123,7 @@ public class AddReminderActivity extends Activity {
         mIntent.putExtra(Reminder.CONTENT, mReminder.getContent());
         mIntent.putExtra(Reminder.DATE, mReminder.getDate());
         mIntent.putExtra(Reminder.ID, String.valueOf(requestCode));
+        mIntent.putExtra(RemindersUser.USER_ID, mRemindersUser.getUserId());
         PendingIntent mPendingIntent = PendingIntent.getBroadcast(getApplicationContext(), requestCode, mIntent, 0);
         AlarmManager mAlarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
         mAlarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), mPendingIntent);

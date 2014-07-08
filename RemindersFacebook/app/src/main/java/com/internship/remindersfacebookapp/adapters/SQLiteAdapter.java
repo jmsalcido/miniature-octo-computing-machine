@@ -180,6 +180,16 @@ public class SQLiteAdapter extends SQLiteOpenHelper{
         return c.moveToFirst();
     }
 
+    public String getUserIdForNotificationReminder(String searchUser, String searchedId){
+        String selectQuery = "SELECT * FROM "
+                +TABLE_REMINDERS+" "
+                +"WHERE "+COLUMN_USER_ID+"='"+searchUser+"' AND "+COLUMN_ID+"="+searchedId+";";
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor c = db.rawQuery(selectQuery,null);
+        c.moveToFirst();
+        return c.getString(3);
+    }
+
     public void updateStateToInactive(String searchedId){
         SQLiteDatabase db = this.getReadableDatabase();
         String query = "UPDATE "+TABLE_REMINDERS+" SET "+COLUMN_STATE+"=0 WHERE "+COLUMN_ID+"="+searchedId;

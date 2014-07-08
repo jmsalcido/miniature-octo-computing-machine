@@ -15,27 +15,34 @@ import com.internship.remindersfacebookapp.app.MainActivity;
 import com.internship.remindersfacebookapp.app.R;
 import com.internship.remindersfacebookapp.app.ReminderView;
 import com.internship.remindersfacebookapp.models.Reminder;
+import com.internship.remindersfacebookapp.models.RemindersUser;
 
 public class ReminderBroadcastReceiver extends BroadcastReceiver {
     private static final String TAG = "BROADCAST_RECEIVER";
     private String mContent;
     private String mDate;
-    private String mReminderID;
+    private String mReminderId;
+    private String mUserId;
 
     @Override
     public void onReceive(Context context, Intent intent) {
         mContent = intent.getExtras().get(Reminder.CONTENT).toString();
         mDate = intent.getExtras().get(Reminder.DATE).toString();
-        mReminderID = intent.getExtras().get(Reminder.ID).toString();
+        mReminderId = intent.getExtras().get(Reminder.ID).toString();
+        mUserId = intent.getExtras().get(RemindersUser.USER_ID).toString();
         SQLiteAdapter db = new SQLiteAdapter(context);
-
-        if (db.isReminderExisting(mReminderID)) {
-            db.updateStateToInactive(mReminderID);
+        String notificationUserReminderId = db.getUserIdForNotificationReminder(mUserId,mReminderId);
+        if (db.isReminderExisting(mReminderId)) {
+            db.updateStateToInactive(mReminderId);
             if (Session.getActiveSession().getState() == SessionState.CLOSED
                     && !MainActivity.mGoogleApiClient.isConnected()) {
-                Log.w(TAG, Session.getActiveSession().getState().toString());
+                Log.w(TAG, "Nothing connected, fine");
             } else {
-                createNotification(context);
+                if (notificationUserReminderId.equals(mUserId)) {
+                    createNotification(context);
+                } else {
+                    Log.w(TAG, mUserId + " not equals " + notificationUserReminderId);
+                }
             }
         }
         db.close();
@@ -45,7 +52,7 @@ public class ReminderBroadcastReceiver extends BroadcastReceiver {
         Intent notificationIntent = new Intent(context, ReminderView.class);
         notificationIntent.putExtra(Reminder.CONTENT, mContent);
         notificationIntent.putExtra(Reminder.DATE, mDate);
-        PendingIntent contentIntent = PendingIntent.getActivity(context, 0, notificationIntent, PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent contentIntent = PendingIntent.getActivity(context, 0, notificationIntent, PendingIntent.FLAG_ONE_SHOT);
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(context)
                         .setSmallIcon(R.drawable.ic_launcher)
@@ -56,6 +63,6 @@ public class ReminderBroadcastReceiver extends BroadcastReceiver {
                         .setAutoCancel(true);
         NotificationManager mNotificationManager =
                 (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        mNotificationManager.notify(Integer.parseInt(mReminderID), mBuilder.build());
+        mNotificationManager.notify(Integer.parseInt(mReminderId), mBuilder.build());
     }
 }
