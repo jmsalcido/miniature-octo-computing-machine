@@ -42,11 +42,19 @@ public class MainActivity extends Activity implements View.OnClickListener,Googl
     private UiLifecycleHelper uiHelper;
     private static final int RC_SIGN_IN = 0;
     private static final int PROFILE_PIC_SIZE = 200;
+    //TODO changes here
     public static GoogleApiClient mGoogleApiClient;
+    public static String mCurrentUserId;
+    /*TODO ABOVE*/
     private boolean mIntentInProgress;
     private boolean mSignInClicked;
     private ConnectionResult mConnectionResult;
     private SignInButton GoogleLoginButton;
+
+
+    public String getCurrentUserId(){
+        return mRemindersUser.getUserId();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -124,6 +132,7 @@ public class MainActivity extends Activity implements View.OnClickListener,Googl
                                 user.getProperty("email").toString(),
                                 user.getId(),
                                 user.getId());
+                        mCurrentUserId = mRemindersUser.getUserId();
                         Intent viewPagerIntent = new Intent(getApplicationContext(), ViewPagerActivity.class);
                         viewPagerIntent.putExtra(RemindersUser.USERNAME, mRemindersUser.getName());
                         viewPagerIntent.putExtra(RemindersUser.MAIL, mRemindersUser.getMail());
@@ -173,6 +182,7 @@ public class MainActivity extends Activity implements View.OnClickListener,Googl
                         email,
                         personPhotoUrl,
                         personGooglePlusId);
+                mCurrentUserId = mRemindersUser.getUserId();
                 Intent viewPagerIntent = new Intent(this, ViewPagerActivity.class);
                 viewPagerIntent.putExtra(RemindersUser.USERNAME, mRemindersUser.getName());
                 viewPagerIntent.putExtra(RemindersUser.MAIL, mRemindersUser.getMail());
@@ -214,4 +224,6 @@ public class MainActivity extends Activity implements View.OnClickListener,Googl
             resolveSignInError();
         }
     }
+
+
 }

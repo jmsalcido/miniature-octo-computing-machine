@@ -22,26 +22,28 @@ public class ReminderBroadcastReceiver extends BroadcastReceiver {
     private String mContent;
     private String mDate;
     private String mReminderId;
-    private String mUserId;
+    private String mCurrentUserId;
+    private String mReminderUserId;
 
     @Override
     public void onReceive(Context context, Intent intent) {
+        mCurrentUserId = MainActivity.mCurrentUserId;
         mContent = intent.getExtras().get(Reminder.CONTENT).toString();
         mDate = intent.getExtras().get(Reminder.DATE).toString();
         mReminderId = intent.getExtras().get(Reminder.ID).toString();
-        mUserId = intent.getExtras().get(RemindersUser.USER_ID).toString();
+        mReminderUserId = intent.getExtras().get(RemindersUser.USER_ID).toString();
         SQLiteAdapter db = new SQLiteAdapter(context);
-        String notificationUserReminderId = db.getUserIdForNotificationReminder(mUserId,mReminderId);
         if (db.isReminderExisting(mReminderId)) {
             db.updateStateToInactive(mReminderId);
             if (Session.getActiveSession().getState() == SessionState.CLOSED
                     && !MainActivity.mGoogleApiClient.isConnected()) {
                 Log.w(TAG, "Nothing connected, fine");
             } else {
-                if (notificationUserReminderId.equals(mUserId)) {
+               String notificationUserReminderId = db.getUserIdForNotificationReminder(mReminderUserId, mReminderId);
+                if (notificationUserReminderId.equals(mCurrentUserId)) {
                     createNotification(context);
                 } else {
-                    Log.w(TAG, mUserId + " not equals " + notificationUserReminderId);
+                    Log.w(TAG, mCurrentUserId + " not equals " + notificationUserReminderId);
                 }
             }
         }

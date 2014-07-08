@@ -110,6 +110,7 @@ public class AddReminderActivity extends Activity {
             mTimePicker.setVisibility(View.VISIBLE);
             InputMethodManager inputManager = (InputMethodManager)
                     getSystemService(Context.INPUT_METHOD_SERVICE);
+            //noinspection ConstantConditions
             inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),
                     InputMethodManager.HIDE_NOT_ALWAYS);
             Toast.makeText(this, "Now select the hour and date", Toast.LENGTH_SHORT).show();
