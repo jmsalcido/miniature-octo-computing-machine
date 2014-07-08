@@ -52,7 +52,8 @@ public class ReminderBroadcastReceiver extends BroadcastReceiver {
         Intent notificationIntent = new Intent(context, ReminderView.class);
         notificationIntent.putExtra(Reminder.CONTENT, mContent);
         notificationIntent.putExtra(Reminder.DATE, mDate);
-        PendingIntent contentIntent = PendingIntent.getActivity(context, 0, notificationIntent, PendingIntent.FLAG_ONE_SHOT);
+        notificationIntent.setAction("foo");
+        PendingIntent contentIntent = PendingIntent.getActivity(context, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(context)
                         .setSmallIcon(R.drawable.ic_launcher)
