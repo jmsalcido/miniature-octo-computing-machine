@@ -1,12 +1,13 @@
 package com.internship.remindersfacebookapp.app;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
 
 import com.facebook.Request;
 import com.facebook.Response;
@@ -45,11 +46,14 @@ public class MainActivity extends Activity implements View.OnClickListener,Googl
     private boolean mSignInClicked;
     private ConnectionResult mConnectionResult;
     private SignInButton GoogleLoginButton;
+    private ProgressDialog mProgressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        mProgressDialog = new ProgressDialog(this);
+        mProgressDialog.setTitle("Signing in...");
         GoogleLoginButton = (SignInButton) findViewById(R.id.btn_sign_in);
         GoogleLoginButton.setOnClickListener(this);
         FacebookLoginButton = (LoginButton) findViewById(R.id.loginButton);
@@ -97,7 +101,7 @@ public class MainActivity extends Activity implements View.OnClickListener,Googl
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         uiHelper.onSaveInstanceState(outState);
     }
@@ -177,8 +181,9 @@ public class MainActivity extends Activity implements View.OnClickListener,Googl
                 viewPagerIntent.putExtra(RemindersUser.IMAGE, mRemindersUser.getImage());
                 viewPagerIntent.putExtra(RemindersUser.USER_ID, mRemindersUser.getUserId());
                 startActivity(viewPagerIntent);
+                mProgressDialog.dismiss();
             } else {
-                Toast.makeText(this, "Person information is null", Toast.LENGTH_LONG).show();
+                getProfileInformation();
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -209,6 +214,7 @@ public class MainActivity extends Activity implements View.OnClickListener,Googl
     public void onClick(View view) {
         if (!mGoogleApiClient.isConnecting()) {
             mSignInClicked = true;
+            mProgressDialog.show();
             resolveSignInError();
         }
     }
