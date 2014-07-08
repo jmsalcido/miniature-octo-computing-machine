@@ -22,12 +22,11 @@ public class ReminderBroadcastReceiver extends BroadcastReceiver {
     private String mContent;
     private String mDate;
     private String mReminderId;
-    private String mCurrentUserId;
     private String mReminderUserId;
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        mCurrentUserId = MainActivity.mCurrentUserId;
+        String mCurrentUserId = MainActivity.mCurrentUserId;
         mContent = intent.getExtras().get(Reminder.CONTENT).toString();
         mDate = intent.getExtras().get(Reminder.DATE).toString();
         mReminderId = intent.getExtras().get(Reminder.ID).toString();
@@ -35,15 +34,17 @@ public class ReminderBroadcastReceiver extends BroadcastReceiver {
         SQLiteAdapter db = new SQLiteAdapter(context);
         if (db.isReminderExisting(mReminderId)) {
             db.updateStateToInactive(mReminderId);
-            if (Session.getActiveSession().getState() == SessionState.CLOSED
-                    && !MainActivity.mGoogleApiClient.isConnected()) {
-                Log.w(TAG, "Nothing connected, fine");
-            } else {
-               String notificationUserReminderId = db.getUserIdForNotificationReminder(mReminderUserId, mReminderId);
-                if (notificationUserReminderId.equals(mCurrentUserId)) {
-                    createNotification(context);
+            if(Session.getActiveSession() != null && !mCurrentUserId.equals(null)){
+                if (Session.getActiveSession().getState() == SessionState.CLOSED
+                        && !MainActivity.mGoogleApiClient.isConnected()) {
+                    Log.w(TAG, "Nothing connected, fine");
                 } else {
-                    Log.w(TAG, mCurrentUserId + " not equals " + notificationUserReminderId);
+                    String notificationUserReminderId = db.getUserIdForNotificationReminder(mReminderUserId, mReminderId);
+                    if (notificationUserReminderId.equals(mCurrentUserId)) {
+                        createNotification(context);
+                    } else {
+                        Log.w(TAG, mCurrentUserId + " not equals " + notificationUserReminderId);
+                    }
                 }
             }
         }
@@ -55,7 +56,7 @@ public class ReminderBroadcastReceiver extends BroadcastReceiver {
         notificationIntent.putExtra(Reminder.CONTENT, mContent);
         notificationIntent.putExtra(Reminder.DATE, mDate);
         notificationIntent.setAction("foo");
-        PendingIntent contentIntent = PendingIntent.getActivity(context, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent contentIntent = PendingIntent.getActivity(context, Integer.parseInt(mReminderId), notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(context)
                         .setSmallIcon(R.drawable.ic_launcher)
