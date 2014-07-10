@@ -7,6 +7,7 @@ import android.util.Log;
 import android.widget.TextView;
 
 import com.example.ldurazo.androidfirebase.R;
+import com.example.ldurazo.androidfirebase.services.HttpTransportAsyncTask;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
@@ -20,9 +21,11 @@ import java.io.InputStreamReader;
 
 
 public class MainActivity extends Activity {
+private static final String TAG = "Activity";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        new HttpTransportAsyncTask().execute(TAG);
     }
 }
