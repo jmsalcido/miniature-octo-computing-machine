@@ -1,20 +1,16 @@
 package com.example.ldurazo.androidfirebase.services;
 
-
-import android.app.IntentService;
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
 
-public class HttpTransportService extends IntentService {
-
-    public HttpTransportService(String name) {
-        super(name);
-    }
+public class HttpTransportService extends Service {
+    private static final String TAG = "Service";
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        //TODO do something useful
+        new HttpTransportAsyncTask().execute(TAG);
+        stopSelf();
         return Service.START_NOT_STICKY;
     }
 
@@ -22,11 +18,6 @@ public class HttpTransportService extends IntentService {
     public IBinder onBind(Intent intent) {
         //TODO for communication return IBinder implementation
         return null;
-    }
-
-    @Override
-    protected void onHandleIntent(Intent intent) {
-
     }
 }
 
