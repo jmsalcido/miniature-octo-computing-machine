@@ -1,9 +1,9 @@
 package com.example.ldurazo.androidfirebase.services;
 
-import android.os.AsyncTask;
 import android.util.Log;
+import android.os.AsyncTask;
 
-import com.example.ldurazo.androidfirebase.interfaces.HttpTransportHttpClient;
+import com.example.ldurazo.androidfirebase.interfaces.HttpTransport;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
@@ -22,15 +22,15 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 
-public class HttpTransportAsyncTask extends AsyncTask<String, Void, String> implements HttpTransportHttpClient {
+public class HttpClientImplementation extends AsyncTask<String, Void, String> implements HttpTransport {
     private static final String TAG = "AsyncTask";
 
     @Override
     protected String doInBackground(String... params) {
-        GET();
-        POST();
-        PUT();
-        DELETE();
+        Get();
+        Post();
+        Put();
+        Delete();
         return null;
     }
 
@@ -40,7 +40,7 @@ public class HttpTransportAsyncTask extends AsyncTask<String, Void, String> impl
     }
 
     @Override
-    public void GET() {
+    public void Get() {
         HttpClient client = new DefaultHttpClient();
         HttpResponse response;
         HttpGet request = new HttpGet("https://ldurazoandroid.firebaseio.com/user.json"); //use your Firebase URL
@@ -64,7 +64,7 @@ public class HttpTransportAsyncTask extends AsyncTask<String, Void, String> impl
     }
 
     @Override
-    public void POST() {
+    public void Post() {
         HttpClient client = new DefaultHttpClient();
         HttpResponse response;
         HttpPost httppost = new HttpPost("https://ldurazoandroid.firebaseio.com/user.json");
@@ -76,7 +76,6 @@ public class HttpTransportAsyncTask extends AsyncTask<String, Void, String> impl
 
             // Execute HTTP Post Request
             response = client.execute(httppost);
-            GET();
         } catch (ClientProtocolException e) {
             // TODO Auto-generated catch block
         } catch (IOException e) {
@@ -87,7 +86,7 @@ public class HttpTransportAsyncTask extends AsyncTask<String, Void, String> impl
     }
 
     @Override
-    public void PUT() {
+    public void Put() {
         HttpClient client = new DefaultHttpClient();
         HttpResponse response;
         HttpPut httpPut = new HttpPut("https://ldurazoandroid.firebaseio.com/object.json");
@@ -98,7 +97,6 @@ public class HttpTransportAsyncTask extends AsyncTask<String, Void, String> impl
             httpPut.setEntity(new StringEntity(jsonObject.toString()));
 
             response = client.execute(httpPut);
-            GET();
         } catch (ClientProtocolException e) {
             // TODO Auto-generated catch block
         } catch (IOException e) {
@@ -110,7 +108,7 @@ public class HttpTransportAsyncTask extends AsyncTask<String, Void, String> impl
     }
 
     @Override
-    public void DELETE() {
+    public void Delete() {
         HttpClient client = new DefaultHttpClient();
         HttpResponse response;
         HttpDelete httpDelete = new HttpDelete("https://ldurazoandroid.firebaseio.com/object.json");

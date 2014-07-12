@@ -6,13 +6,14 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 
-public interface HttpTransportHttpClient {
+public interface HttpTransport {
 
-    public void GET();
 
-    public void POST();
+    public void Get();
 
-    public void PUT();
+    public void Post();
 
-    public void DELETE();
+    public void Put();
+
+    public void Delete();
 }

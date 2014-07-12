@@ -9,7 +9,8 @@ public class HttpTransportService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        new HttpTransportAsyncTask().execute(TAG);
+        //new HttpClientImplementation().execute(TAG);
+        new SpringImplementation().execute(TAG);
         stopSelf();
         return Service.START_NOT_STICKY;
     }
