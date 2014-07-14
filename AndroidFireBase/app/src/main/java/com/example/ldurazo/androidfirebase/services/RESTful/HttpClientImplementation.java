@@ -1,4 +1,4 @@
-package com.example.ldurazo.androidfirebase.services;
+package com.example.ldurazo.androidfirebase.services.RESTful;
 
 import android.util.Log;
 import android.os.AsyncTask;
