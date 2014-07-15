@@ -1,6 +1,10 @@
 package com.example.ldurazo.instagramfeed;
 
+import android.app.ListActivity;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
@@ -13,7 +17,11 @@ import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 
 public class InstagramAsync extends AsyncTask<String, Void, String> {
@@ -22,17 +30,19 @@ public class InstagramAsync extends AsyncTask<String, Void, String> {
     public final static String CLIENT_SECRET = "3acc7e996418463fa70d7220d41a495a";
     public final static String CALLBACK_URI = "http://luisdurazoa.tumblr.com";
     public final static String TOKEN_URL = "https://api.instagram.com/v1/media/popular/?client_id=" + CLIENT_ID;
+    private ListActivity activity;
     private List<InstaObject> instaList;
 
+    public InstagramAsync(ListActivity activity) {this.activity = activity;}
 
     @Override
     protected String doInBackground(String... strings) {
         StringBuilder stringBuilder = new StringBuilder();
         HttpClient client = new DefaultHttpClient();
+        instaList = new ArrayList<InstaObject>();
         HttpResponse response;
         HttpGet request = new HttpGet(TOKEN_URL);
         String line;
-        InstaObject instaObject = new InstaObject();
         try {
             response = client.execute(request);
             // Get the response
@@ -47,6 +57,7 @@ public class InstagramAsync extends AsyncTask<String, Void, String> {
             JSONObject imagesObject;
             JSONObject captionObject;
             for(int i=0; i<parentDataArray.length();i++) {
+                InstaObject instaObject = new InstaObject();
                 tempObject = parentDataArray.getJSONObject(i);
                 imagesObject = tempObject.getJSONObject("images").getJSONObject("thumbnail");
                 instaObject.setSmallImage(imagesObject.getString("url"));
@@ -58,6 +69,9 @@ public class InstagramAsync extends AsyncTask<String, Void, String> {
                     captionObject = tempObject.getJSONObject("caption");
                     instaObject.setDescription(captionObject.getString("text"));
                 }
+                Log.w(TAG, instaObject.getDescription());
+                instaObject.setSmallImageBitmap(BitMapCreator(instaObject.getSmallImage()));
+                instaObject.setLargeImageBitmap(BitMapCreator(instaObject.getLargeImage()));
                 instaList.add(instaObject);
             }
         } catch (ClientProtocolException e) {
@@ -75,5 +89,22 @@ public class InstagramAsync extends AsyncTask<String, Void, String> {
     @Override
     protected void onPostExecute(String s) {
         super.onPostExecute(s);
+        activity.setListAdapter(new InstaGramAdapter(activity, instaList));
+    }
+
+    public Bitmap BitMapCreator(String imageurl) {
+        Bitmap bitmap = null;
+        try {
+            URL url = new URL(imageurl);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setDoInput(true);
+            connection.connect();
+            InputStream input = null;
+            input = connection.getInputStream();
+            bitmap = BitmapFactory.decodeStream(input);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return bitmap;
     }
 }
