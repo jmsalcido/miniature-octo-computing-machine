@@ -5,7 +5,16 @@ package com.example.ldurazo.instagramfeed;
  */
 public class InstaObject {
     private String description;
-    private String imageURL;
+    private String smallImage;
+    private String largeImage;
+
+    public String getLargeImage() {
+        return largeImage;
+    }
+
+    public void setLargeImage(String largeImage) {
+        this.largeImage = largeImage;
+    }
 
     public String getDescription() {
         return description;
@@ -15,11 +24,11 @@ public class InstaObject {
         this.description = description;
     }
 
-    public String getImageURL() {
-        return imageURL;
+    public String getSmallImage() {
+        return smallImage;
     }
 
-    public void setImageURL(String imageURL) {
-        this.imageURL = imageURL;
+    public void setSmallImage(String smallImage) {
+        this.smallImage = smallImage;
     }
 }

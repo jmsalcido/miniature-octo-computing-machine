@@ -1,7 +1,6 @@
 package com.example.ldurazo.instagramfeed;
 
 import android.os.AsyncTask;
-import android.util.Log;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
@@ -49,15 +48,17 @@ public class InstagramAsync extends AsyncTask<String, Void, String> {
             JSONObject captionObject;
             for(int i=0; i<parentDataArray.length();i++) {
                 tempObject = parentDataArray.getJSONObject(i);
+                imagesObject = tempObject.getJSONObject("images").getJSONObject("thumbnail");
+                instaObject.setSmallImage(imagesObject.getString("url"));
                 imagesObject = tempObject.getJSONObject("images").getJSONObject("low_resolution");
-                Log.i(TAG,tempObject.toString());
+                instaObject.setLargeImage(imagesObject.getString("url"));
                 if(tempObject.isNull("caption")){
                     instaObject.setDescription("No description");
                 } else{
                     captionObject = tempObject.getJSONObject("caption");
                     instaObject.setDescription(captionObject.getString("text"));
                 }
-                instaObject.setImageURL(imagesObject.getString("url"));
+                instaList.add(instaObject);
             }
         } catch (ClientProtocolException e) {
             // TODO Auto-generated catch block
