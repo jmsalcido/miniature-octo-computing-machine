@@ -4,7 +4,6 @@ import android.app.ListActivity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
-import android.util.Log;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
@@ -69,7 +68,6 @@ public class InstagramAsync extends AsyncTask<String, Void, String> {
                     captionObject = tempObject.getJSONObject("caption");
                     instaObject.setDescription(captionObject.getString("text"));
                 }
-                Log.w(TAG, instaObject.getDescription());
                 instaObject.setSmallImageBitmap(BitMapCreator(instaObject.getSmallImage()));
                 instaObject.setLargeImageBitmap(BitMapCreator(instaObject.getLargeImage()));
                 instaList.add(instaObject);
