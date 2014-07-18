@@ -11,4 +11,6 @@ public class Constants {
     public static final String SERVICE="https://datamarket.accesscontrol.windows.net/v2/OAuth2-13";
     public static final String SCOPE="http://music.xboxlive.com";
     public static final String TOKEN="TOKEN";
+    public static final String GRANT_TYPE="client_credentials";
+    public static final String CONTENT_TYPE="application/x-www-form-urlencoded";
 }
