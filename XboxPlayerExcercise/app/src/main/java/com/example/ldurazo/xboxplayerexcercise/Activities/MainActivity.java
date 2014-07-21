@@ -23,5 +23,4 @@ public class MainActivity extends Activity {
         textView = (TextView) findViewById(R.id.textView);
         textView.setText(accessToken);
     }
-
 }

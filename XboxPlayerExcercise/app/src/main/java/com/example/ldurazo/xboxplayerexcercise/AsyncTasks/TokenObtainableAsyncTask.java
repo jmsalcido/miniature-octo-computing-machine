@@ -1,7 +1,6 @@
 package com.example.ldurazo.xboxplayerexcercise.AsyncTasks;
 
 import android.os.AsyncTask;
-import android.util.Log;
 
 import com.example.ldurazo.xboxplayerexcercise.Models.Constants;
 
@@ -52,9 +51,8 @@ public class TokenObtainableAsyncTask extends AsyncTask<Void, Void, String> {
                 BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"),8);
                 String inputLine;
                 while((inputLine=bufferedReader.readLine())!=null){
-                    stringBuilder.append(inputLine+"/n");
+                    stringBuilder.append(inputLine);
                 }
-                Log.w(Constants.TAG, stringBuilder.toString());
                 return retrieveToken(stringBuilder.toString());
             }else {
                 return Constants.ERROR;
@@ -83,8 +81,7 @@ public class TokenObtainableAsyncTask extends AsyncTask<Void, Void, String> {
             request.setEntity(new UrlEncodedFormEntity(nameValuePairs));
             HttpResponse response = client.execute(request);
             HttpEntity entity = response.getEntity();
-            InputStream inputStream = entity.getContent();
-            return inputStream;
+            return entity.getContent();
         } catch (IOException e) {
             e.printStackTrace();
         }
