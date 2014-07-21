@@ -7,12 +7,9 @@ import com.example.ldurazo.xboxplayerexcercise.Models.Constants;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
@@ -23,23 +20,18 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.List;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 
-
-public class TokenObtainableAsyncTask extends AsyncTask<Void, Void, String> {
-    private OnTokenTaskCallback callbacks;
-    public TokenObtainableAsyncTask(OnTokenTaskCallback callbacks) {
-        this.callbacks = callbacks;
-    }
-
-    @Override
-    protected void onPostExecute(String result) {
-        super.onPostExecute(result);
-        if(!result.equals(Constants.ERROR)){
-            callbacks.onTokenReceived(result);
-        }else{
-            callbacks.onTokenNotReceived();
+public class SearchArtistAsyncTask extends AsyncTask<Void, Void, String> {
+    private String token;
+    public SearchArtistAsyncTask(String token) {
+        try {
+            token = URLEncoder.encode(token, "UTF-8");
+            this.token = token;
+        } catch (UnsupportedEncodingException e) {
+            this.token = Constants.ERROR;
+            e.printStackTrace();
         }
     }
 
@@ -53,9 +45,9 @@ public class TokenObtainableAsyncTask extends AsyncTask<Void, Void, String> {
                 String inputLine;
                 while((inputLine=bufferedReader.readLine())!=null){
                     stringBuilder.append(inputLine);
+                    Log.w(Constants.TAG, inputLine);
                 }
-                Log.w(Constants.TAG,stringBuilder.toString());
-                return retrieveToken(stringBuilder.toString());
+                return retrieveArtist(stringBuilder.toString());
             }else {
                 return Constants.ERROR;
             }
@@ -63,6 +55,11 @@ public class TokenObtainableAsyncTask extends AsyncTask<Void, Void, String> {
             e.printStackTrace();
         }
         return Constants.ERROR;
+    }
+
+    @Override
+    protected void onPostExecute(String s) {
+        super.onPostExecute(s);
     }
 
     private InputStream establishConnection(){
@@ -73,14 +70,11 @@ public class TokenObtainableAsyncTask extends AsyncTask<Void, Void, String> {
             HttpConnectionParams.setSoTimeout(httpParameters, timeoutSocket);
             HttpConnectionParams.setConnectionTimeout(httpParameters, timeoutConnection);
             HttpClient client = new DefaultHttpClient(httpParameters);
-            HttpPost request = new HttpPost(Constants.SERVICE);
-            request.setHeader("Content_type", Constants.CONTENT_TYPE);
-            List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(4);
-            nameValuePairs.add(new BasicNameValuePair("client_id",Constants.CLIENT_ID));
-            nameValuePairs.add(new BasicNameValuePair("client_secret",Constants.CLIENT_SECRET));
-            nameValuePairs.add(new BasicNameValuePair("scope",Constants.SCOPE));
-            nameValuePairs.add(new BasicNameValuePair("grant_type",Constants.GRANT_TYPE));
-            request.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+            String query = Constants.SCOPE_SERVICE+"/1/content/music/search?q=daft+punk&accessToken=Bearer+"+token;
+            Log.w(Constants.TAG,query);
+            HttpGet request = new HttpGet(query);
+            request.setHeader("Accept", "application/json");
+            request.setHeader("Content-type", "application/json");
             HttpResponse response = client.execute(request);
             HttpEntity entity = response.getEntity();
             return entity.getContent();
@@ -90,10 +84,14 @@ public class TokenObtainableAsyncTask extends AsyncTask<Void, Void, String> {
         return null;
     }
 
-    private String retrieveToken(String inputLine){
+    private String retrieveArtist(String jsonString){
         try {
-            JSONObject responseObject = new JSONObject(inputLine);
-            return responseObject.getString("access_token");
+            //TODO please implement the jsonarray as it should be dude.
+            JSONObject parentData = new JSONObject(jsonString);
+            JSONObject artists = parentData.getJSONObject("Artists");
+            JSONObject items = artists.getJSONArray("Items").getJSONObject(0);
+            Log.w(Constants.TAG, items.get("Name").toString());
+            return items.getString("Name");
         } catch (JSONException e) {
             e.printStackTrace();
         }

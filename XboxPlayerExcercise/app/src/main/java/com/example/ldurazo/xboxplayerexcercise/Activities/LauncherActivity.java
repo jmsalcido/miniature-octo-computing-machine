@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.TextView;
@@ -23,7 +24,6 @@ public class LauncherActivity extends Activity implements OnTokenTaskCallback{
         super.onCreate(savedInstanceState);
         dialog = new ProgressDialog(LauncherActivity.this);
         setContentView(R.layout.activity_launcher);
-
         new TokenObtainableAsyncTask(this).execute();
         initUI();
     }
@@ -36,6 +36,7 @@ public class LauncherActivity extends Activity implements OnTokenTaskCallback{
 
     @Override
     public void onTokenReceived(String response) {
+        Log.w(Constants.TAG, response);
         if(dialog.isShowing()){
             dialog.dismiss();
         }
