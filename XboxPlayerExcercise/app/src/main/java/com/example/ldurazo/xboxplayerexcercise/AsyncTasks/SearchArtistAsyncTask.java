@@ -26,12 +26,18 @@ import java.net.URLEncoder;
 
 public class SearchArtistAsyncTask extends AsyncTask<Void, Void, String> {
     private String token;
-    public SearchArtistAsyncTask(String token) {
+    private String searchQuery;
+    private String search;
+    public SearchArtistAsyncTask(String token, String searchQuery, String searchType) {
         try {
             token = URLEncoder.encode(token, "UTF-8");
             this.token = token;
+            this.searchQuery=searchQuery;
+            this.search=searchType;
         } catch (UnsupportedEncodingException e) {
             this.token = Constants.ERROR;
+            this.searchQuery=Constants.ERROR;
+            this.search=Constants.ERROR;
             e.printStackTrace();
         }
     }
@@ -71,7 +77,7 @@ public class SearchArtistAsyncTask extends AsyncTask<Void, Void, String> {
             HttpConnectionParams.setSoTimeout(httpParameters, timeoutSocket);
             HttpConnectionParams.setConnectionTimeout(httpParameters, timeoutConnection);
             HttpClient client = new DefaultHttpClient(httpParameters);
-            String query = Constants.SCOPE_SERVICE+"/1/content/music/search?q=daft+punk&accessToken=Bearer+"+token;
+            String query = Constants.SCOPE_SERVICE+"/1/content/music/search?q="+searchQuery+"&accessToken=Bearer+"+token;
             Log.w(Constants.TAG,query);
             HttpGet request = new HttpGet(query);
             request.setHeader("Accept", "application/json");
@@ -89,7 +95,7 @@ public class SearchArtistAsyncTask extends AsyncTask<Void, Void, String> {
         try {
             //TODO please implement the json array as it should be dude.
             JSONObject parentData = new JSONObject(jsonString);
-            JSONObject searchType = parentData.getJSONObject("Tracks");
+            JSONObject searchType = parentData.getJSONObject(search);
             JSONArray searchResults = searchType.getJSONArray("Items");
             JSONObject searchObject;
             for (int i=0; i<searchResults.length();i++){
