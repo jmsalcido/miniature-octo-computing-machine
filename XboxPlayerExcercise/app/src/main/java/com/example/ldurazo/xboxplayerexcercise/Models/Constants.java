@@ -1,8 +1,6 @@
 package com.example.ldurazo.xboxplayerexcercise.models;
 
-/**
- * Created by ldurazo on 7/17/2014.
- */
+
 public class Constants {
     public static final String TAG="MUSIC_PLAYER_APP";
     public static final String CLIENT_ID="musicplayer_internship_ldurazo";

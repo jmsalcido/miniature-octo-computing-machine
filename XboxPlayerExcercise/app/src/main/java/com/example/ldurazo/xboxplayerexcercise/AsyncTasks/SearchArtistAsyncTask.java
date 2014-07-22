@@ -66,6 +66,7 @@ public class SearchArtistAsyncTask extends AsyncTask<Void, Void, String> {
 
     @Override
     protected void onPostExecute(String s) {
+        Log.w(Constants.TAG, s);
         super.onPostExecute(s);
     }
 
@@ -93,7 +94,6 @@ public class SearchArtistAsyncTask extends AsyncTask<Void, Void, String> {
 
     private String retrieveArtist(String jsonString){
         try {
-            //TODO please implement the json array as it should be dude.
             JSONObject parentData = new JSONObject(jsonString);
             JSONObject searchType = parentData.getJSONObject(search);
             JSONArray searchResults = searchType.getJSONArray("Items");
@@ -105,7 +105,7 @@ public class SearchArtistAsyncTask extends AsyncTask<Void, Void, String> {
             return Constants.ERROR;
         } catch (JSONException e) {
             e.printStackTrace();
+            return Constants.ERROR;
         }
-        return Constants.ERROR;
     }
 }

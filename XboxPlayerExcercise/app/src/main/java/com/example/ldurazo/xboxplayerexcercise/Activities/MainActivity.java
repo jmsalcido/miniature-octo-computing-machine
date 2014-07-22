@@ -41,7 +41,7 @@ public class MainActivity extends Activity {
         String search_query;
         if(!editText.getText().toString().equals(null) && !editText.getText().toString().equals("")){
             search_query=editText.getText().toString();
-            search_query = search_query.replace(" ", "+");
+            search_query = search_query.replaceAll("\\s+", "+");
             searchType = getSearchType();
             new SearchArtistAsyncTask(accessToken, search_query, searchType).execute();
         }else{
