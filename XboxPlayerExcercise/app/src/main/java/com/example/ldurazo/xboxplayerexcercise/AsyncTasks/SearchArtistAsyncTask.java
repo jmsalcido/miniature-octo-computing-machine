@@ -23,8 +23,9 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 
-public class SearchArtistAsyncTask extends AsyncTask<Void, Void, String> {
+public class SearchArtistAsyncTask extends AsyncTask<Void, Void, ArrayList<Object>> {
     private String token;
     private String searchQuery;
     private String search;
@@ -43,7 +44,7 @@ public class SearchArtistAsyncTask extends AsyncTask<Void, Void, String> {
     }
 
     @Override
-    protected String doInBackground(Void... voids) {
+    protected ArrayList<Object> doInBackground(Void... voids) {
         try {
             StringBuilder stringBuilder = new StringBuilder();
             InputStream inputStream = establishConnection();
@@ -56,17 +57,16 @@ public class SearchArtistAsyncTask extends AsyncTask<Void, Void, String> {
                 }
                 return retrieveArtist(stringBuilder.toString());
             }else {
-                return Constants.ERROR;
+                return Constants.EMPTY_LIST;
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return Constants.ERROR;
+        return Constants.EMPTY_LIST;
     }
 
     @Override
-    protected void onPostExecute(String s) {
-        Log.w(Constants.TAG, s);
+    protected void onPostExecute(ArrayList<Object> s) {
         super.onPostExecute(s);
     }
 
@@ -92,20 +92,22 @@ public class SearchArtistAsyncTask extends AsyncTask<Void, Void, String> {
         return null;
     }
 
-    private String retrieveArtist(String jsonString){
+    private ArrayList<Object> retrieveArtist(String jsonString){
         try {
+            ArrayList<Object> resultList= new ArrayList();
             JSONObject parentData = new JSONObject(jsonString);
             JSONObject searchType = parentData.getJSONObject(search);
             JSONArray searchResults = searchType.getJSONArray("Items");
             JSONObject searchObject;
             for (int i=0; i<searchResults.length();i++){
                 searchObject = searchResults.getJSONObject(i);
+                resultList.add(searchObject);
                 Log.w(Constants.TAG, searchObject.getString("Name"));
             }
-            return Constants.ERROR;
+            return resultList;
         } catch (JSONException e) {
             e.printStackTrace();
-            return Constants.ERROR;
+            return Constants.EMPTY_LIST;
         }
     }
 }
