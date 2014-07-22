@@ -1,4 +1,4 @@
-package com.example.ldurazo.xboxplayerexcercise.Activities;
+package com.example.ldurazo.xboxplayerexcercise.activities;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -9,9 +9,9 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.TextView;
 
-import com.example.ldurazo.xboxplayerexcercise.AsyncTasks.OnTokenTaskCallback;
-import com.example.ldurazo.xboxplayerexcercise.AsyncTasks.TokenObtainableAsyncTask;
-import com.example.ldurazo.xboxplayerexcercise.Models.Constants;
+import com.example.ldurazo.xboxplayerexcercise.asynctasks.OnTokenTaskCallback;
+import com.example.ldurazo.xboxplayerexcercise.asynctasks.TokenObtainableAsyncTask;
+import com.example.ldurazo.xboxplayerexcercise.models.Constants;
 import com.example.ldurazo.xboxplayerexcercise.R;
 
 

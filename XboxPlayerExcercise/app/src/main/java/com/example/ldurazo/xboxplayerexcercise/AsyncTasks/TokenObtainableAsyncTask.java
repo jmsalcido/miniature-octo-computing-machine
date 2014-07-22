@@ -1,9 +1,9 @@
-package com.example.ldurazo.xboxplayerexcercise.AsyncTasks;
+package com.example.ldurazo.xboxplayerexcercise.asynctasks;
 
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.example.ldurazo.xboxplayerexcercise.Models.Constants;
+import com.example.ldurazo.xboxplayerexcercise.models.Constants;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;

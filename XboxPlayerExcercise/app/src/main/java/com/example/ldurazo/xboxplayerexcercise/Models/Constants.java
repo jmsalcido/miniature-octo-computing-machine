@@ -1,4 +1,4 @@
-package com.example.ldurazo.xboxplayerexcercise.Models;
+package com.example.ldurazo.xboxplayerexcercise.models;
 
 /**
  * Created by ldurazo on 7/17/2014.

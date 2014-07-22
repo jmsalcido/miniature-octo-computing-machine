@@ -1,9 +1,9 @@
-package com.example.ldurazo.xboxplayerexcercise.AsyncTasks;
+package com.example.ldurazo.xboxplayerexcercise.asynctasks;
 
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.example.ldurazo.xboxplayerexcercise.Models.Constants;
+import com.example.ldurazo.xboxplayerexcercise.models.Constants;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -13,6 +13,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -86,12 +87,16 @@ public class SearchArtistAsyncTask extends AsyncTask<Void, Void, String> {
 
     private String retrieveArtist(String jsonString){
         try {
-            //TODO please implement the jsonarray as it should be dude.
+            //TODO please implement the json array as it should be dude.
             JSONObject parentData = new JSONObject(jsonString);
-            JSONObject artists = parentData.getJSONObject("Artists");
-            JSONObject items = artists.getJSONArray("Items").getJSONObject(0);
-            Log.w(Constants.TAG, items.get("Name").toString());
-            return items.getString("Name");
+            JSONObject searchType = parentData.getJSONObject("Tracks");
+            JSONArray searchResults = searchType.getJSONArray("Items");
+            JSONObject searchObject;
+            for (int i=0; i<searchResults.length();i++){
+                searchObject = searchResults.getJSONObject(i);
+                Log.w(Constants.TAG, searchObject.getString("Name"));
+            }
+            return Constants.ERROR;
         } catch (JSONException e) {
             e.printStackTrace();
         }
