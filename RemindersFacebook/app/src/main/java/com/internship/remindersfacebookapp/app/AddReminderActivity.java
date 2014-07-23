@@ -110,6 +110,7 @@ public class AddReminderActivity extends Activity {
             mTimePicker.setVisibility(View.VISIBLE);
             InputMethodManager inputManager = (InputMethodManager)
                     getSystemService(Context.INPUT_METHOD_SERVICE);
+            //noinspection ConstantConditions
             inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),
                     InputMethodManager.HIDE_NOT_ALWAYS);
             Toast.makeText(this, "Now select the hour and date", Toast.LENGTH_SHORT).show();
@@ -123,6 +124,7 @@ public class AddReminderActivity extends Activity {
         mIntent.putExtra(Reminder.CONTENT, mReminder.getContent());
         mIntent.putExtra(Reminder.DATE, mReminder.getDate());
         mIntent.putExtra(Reminder.ID, String.valueOf(requestCode));
+        mIntent.putExtra(RemindersUser.USER_ID, mRemindersUser.getUserId());
         PendingIntent mPendingIntent = PendingIntent.getBroadcast(getApplicationContext(), requestCode, mIntent, 0);
         AlarmManager mAlarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
         mAlarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), mPendingIntent);

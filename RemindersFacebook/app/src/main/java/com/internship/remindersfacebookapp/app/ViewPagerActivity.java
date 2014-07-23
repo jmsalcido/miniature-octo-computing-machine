@@ -80,7 +80,7 @@ public class ViewPagerActivity extends FragmentActivity implements ActionBar.Tab
                 this.finish();
             }
         }else{
-            if (!LoginFragment.mGoogleApiClient.isConnected()) {
+            if (!MainActivity.mGoogleApiClient.isConnected()) {
                 this.finish();
             }
         }
@@ -136,6 +136,8 @@ public class ViewPagerActivity extends FragmentActivity implements ActionBar.Tab
     }
     @Override
     public void onBackPressed() {
-        Toast.makeText(this, "Please logout to go back", Toast.LENGTH_LONG).show();
+        Intent i = new Intent(Intent.ACTION_MAIN);
+        i.addCategory(Intent.CATEGORY_HOME);
+        startActivity(i);
     }
 }

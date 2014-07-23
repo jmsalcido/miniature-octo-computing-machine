@@ -42,7 +42,7 @@ private ImageView mImageView;
 
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
-		LoginFragment.mGoogleApiClient.connect();
+		MainActivity.mGoogleApiClient.connect();
         View view = inflater.inflate(R.layout.profile_information, container, false);
 		Bundle extras = getActivity().getIntent().getExtras();
 		RemindersUser remindersUser = new RemindersUser(
@@ -75,9 +75,9 @@ private ImageView mImageView;
                         getActivity().finish();
                     }
                 }else{
-                    if (LoginFragment.mGoogleApiClient.isConnected()) {
-                        Plus.AccountApi.clearDefaultAccount(LoginFragment.mGoogleApiClient);
-                        LoginFragment.mGoogleApiClient.disconnect();
+                    if (MainActivity.mGoogleApiClient.isConnected()) {
+                        Plus.AccountApi.clearDefaultAccount(MainActivity.mGoogleApiClient);
+                        MainActivity.mGoogleApiClient.disconnect();
                         getActivity().finish();
                     }
                 }

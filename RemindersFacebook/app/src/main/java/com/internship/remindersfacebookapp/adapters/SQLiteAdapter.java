@@ -123,8 +123,8 @@ public class SQLiteAdapter extends SQLiteOpenHelper{
                 +"' AND "+COLUMN_STATE+"=1;";
         String expiredRemindersQuery = "SELECT * FROM "
                 +TABLE_REMINDERS
-                +" where "+ COLUMN_REMINDER_USER_ID +"="+ remindersUser.getUserId()
-                +" AND "+COLUMN_STATE+"=0;";
+                +" where "+ COLUMN_REMINDER_USER_ID +"='"+ remindersUser.getUserId()
+                +"' AND "+COLUMN_STATE+"=0;";
 
         List<Reminder> reminderList = new ArrayList<Reminder>();
 		SQLiteDatabase db = this.getReadableDatabase();
@@ -178,6 +178,16 @@ public class SQLiteAdapter extends SQLiteOpenHelper{
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor c = db.rawQuery(selectQuery,null);
         return c.moveToFirst();
+    }
+
+    public String getUserIdForNotificationReminder(String searchUser, String searchedId){
+        String selectQuery = "SELECT * FROM "
+                +TABLE_REMINDERS+" "
+                +"WHERE "+COLUMN_USER_ID+"='"+searchUser+"' AND "+COLUMN_ID+"="+searchedId+";";
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor c = db.rawQuery(selectQuery,null);
+        c.moveToFirst();
+        return c.getString(3);
     }
 
     public void updateStateToInactive(String searchedId){
