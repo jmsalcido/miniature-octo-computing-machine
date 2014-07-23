@@ -23,6 +23,10 @@
             android:windowSoftInputMode="stateHidden"
             android:label="@string/title_activity_player" >
         </activity>
+        <activity
+            android:name=".activities.ListActivity"
+            android:label="@string/title_activity_player">
+        </activity>
     </application>
 
 </manifest>

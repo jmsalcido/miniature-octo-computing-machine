@@ -16,4 +16,7 @@ public class Constants {
     public static final String CONTENT_TYPE = "application/x-www-form-urlencoded";
     public static final String ERROR = "error";
     public static final ArrayList<Object> EMPTY_LIST = null;
+    public static final String ARTISTS="Artists";
+    public static final String ALBUMS="Albums";
+    public static final String TRACKS="Tracks";
 }

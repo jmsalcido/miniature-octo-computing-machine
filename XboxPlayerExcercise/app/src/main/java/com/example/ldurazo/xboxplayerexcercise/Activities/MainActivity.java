@@ -14,7 +14,7 @@ import com.example.ldurazo.xboxplayerexcercise.models.Constants;
 
 public class MainActivity extends Activity {
     private String accessToken;
-    private String searchType="Artist";
+    private String searchType=Constants.ARTISTS;
     TextView textView;
     EditText editText;
     RadioButton artistRadioButton;
@@ -51,12 +51,12 @@ public class MainActivity extends Activity {
 
     private String getSearchType(){
         if(artistRadioButton.isChecked()){
-            return "Artists";
+            return Constants.ARTISTS;
         }if(albumRadioButton.isChecked()){
-            return "Albums";
+            return Constants.ALBUMS;
         }if(songRadioButton.isChecked()){
-            return "Tracks";
+            return Constants.TRACKS;
         }
-        return "Artists";
+        return Constants.ARTISTS;
     }
 }

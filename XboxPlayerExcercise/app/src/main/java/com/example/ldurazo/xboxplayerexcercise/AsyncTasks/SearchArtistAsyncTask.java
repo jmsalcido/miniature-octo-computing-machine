@@ -28,17 +28,17 @@ import java.util.ArrayList;
 public class SearchArtistAsyncTask extends AsyncTask<Void, Void, ArrayList<Object>> {
     private String token;
     private String searchQuery;
-    private String search;
+    private String searchType;
     public SearchArtistAsyncTask(String token, String searchQuery, String searchType) {
         try {
             token = URLEncoder.encode(token, "UTF-8");
             this.token = token;
             this.searchQuery=searchQuery;
-            this.search=searchType;
+            this.searchType =searchType;
         } catch (UnsupportedEncodingException e) {
             this.token = Constants.ERROR;
             this.searchQuery=Constants.ERROR;
-            this.search=Constants.ERROR;
+            this.searchType =Constants.ERROR;
             e.printStackTrace();
         }
     }
@@ -96,15 +96,20 @@ public class SearchArtistAsyncTask extends AsyncTask<Void, Void, ArrayList<Objec
         try {
             ArrayList<Object> resultList= new ArrayList();
             JSONObject parentData = new JSONObject(jsonString);
-            JSONObject searchType = parentData.getJSONObject(search);
-            JSONArray searchResults = searchType.getJSONArray("Items");
-            JSONObject searchObject;
-            for (int i=0; i<searchResults.length();i++){
-                searchObject = searchResults.getJSONObject(i);
-                resultList.add(searchObject);
-                Log.w(Constants.TAG, searchObject.getString("Name"));
+            if(!parentData.isNull("Error")){
+                Log.w(Constants.TAG, "Made it");
+                return Constants.EMPTY_LIST;
+            }else{
+                JSONObject searchTypeObject = parentData.getJSONObject(searchType);
+                JSONArray searchResults = searchTypeObject.getJSONArray("Items");
+                JSONObject searchObject;
+                for (int i=0; i<searchResults.length();i++){
+                    searchObject = searchResults.getJSONObject(i);
+                    resultList.add(searchObject);
+                    Log.w(Constants.TAG, searchObject.getString("Name"));
+                }
+                return resultList;
             }
-            return resultList;
         } catch (JSONException e) {
             e.printStackTrace();
             return Constants.EMPTY_LIST;
