@@ -4,6 +4,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.example.ldurazo.xboxplayerexcercise.models.Constants;
+import com.example.ldurazo.xboxplayerexcercise.models.Token;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -36,9 +37,9 @@ public class TokenObtainableAsyncTask extends AsyncTask<Void, Void, String> {
     @Override
     protected void onPostExecute(String result) {
         super.onPostExecute(result);
-        Constants.ACCESS_TOKEN = result;
+        Token.ACCESS_TOKEN = result;
         if(!result.equals(Constants.ERROR)){
-            callbacks.onTokenReceived(Constants.ACCESS_TOKEN);
+            callbacks.onTokenReceived(Token.ACCESS_TOKEN);
         }else{
             callbacks.onTokenNotReceived();
         }

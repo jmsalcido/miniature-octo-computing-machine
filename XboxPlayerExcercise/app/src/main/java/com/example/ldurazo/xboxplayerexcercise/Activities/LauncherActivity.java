@@ -1,6 +1,8 @@
 package com.example.ldurazo.xboxplayerexcercise.activities;
 
 import android.app.Activity;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,22 +12,23 @@ import android.view.animation.AnimationUtils;
 import android.widget.TextView;
 
 import com.example.ldurazo.xboxplayerexcercise.R;
+import com.example.ldurazo.xboxplayerexcercise.adapters.TokenRefreshBroadcastReceiver;
 import com.example.ldurazo.xboxplayerexcercise.asynctasks.OnTokenTaskCallback;
 import com.example.ldurazo.xboxplayerexcercise.asynctasks.TokenObtainableAsyncTask;
 import com.example.ldurazo.xboxplayerexcercise.models.Constants;
-import com.example.ldurazo.xboxplayerexcercise.services.RefreshTokenService;
+import com.example.ldurazo.xboxplayerexcercise.models.Token;
 
 
 public class LauncherActivity extends Activity implements OnTokenTaskCallback{
-    ProgressDialog dialog;
-    TextView launcherText;
-    Animation animation;
-    Intent serviceIntent;
+    private ProgressDialog dialog;
+    private TextView launcherText;
+    private Animation animation;
+    private PendingIntent tokenRefreshPendingIntent;
+    private AlarmManager alarmManager;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         dialog = new ProgressDialog(LauncherActivity.this);
-        serviceIntent = new Intent(LauncherActivity.this, RefreshTokenService.class);
         dialog.setTitle("Please wait...");
         setContentView(R.layout.activity_launcher);
         new TokenObtainableAsyncTask(this).execute();
@@ -41,18 +44,25 @@ public class LauncherActivity extends Activity implements OnTokenTaskCallback{
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        this.stopService(serviceIntent);
+        if(alarmManager!=null && tokenRefreshPendingIntent!=null){
+            alarmManager.cancel(tokenRefreshPendingIntent);
+        }
     }
 
     @Override
     public void onTokenReceived(String response) {
         Log.w(Constants.TAG, response);
-        if(dialog.isShowing()){
+        if (dialog.isShowing()) {
             dialog.dismiss();
         }
-        Constants.TOKEN_TIME = System.currentTimeMillis();
+        Token.TOKEN_EXPIRE_TIME = System.currentTimeMillis()+5000;
+        Intent tokenRefreshIntent = new Intent(this, TokenRefreshBroadcastReceiver.class);
+        tokenRefreshPendingIntent = PendingIntent.getBroadcast
+                (LauncherActivity.this, 0, tokenRefreshIntent, PendingIntent.FLAG_ONE_SHOT);
+        alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+        alarmManager.set(AlarmManager.RTC, Token.TOKEN_EXPIRE_TIME, tokenRefreshPendingIntent);
+
         Intent searchIntent = new Intent(LauncherActivity.this, SearchActivity.class);
-        this.startService(serviceIntent);
         startActivity(searchIntent);
     }
 

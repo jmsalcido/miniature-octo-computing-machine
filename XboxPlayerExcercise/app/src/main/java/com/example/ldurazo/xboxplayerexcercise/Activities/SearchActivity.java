@@ -1,6 +1,7 @@
 package com.example.ldurazo.xboxplayerexcercise.activities;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
@@ -10,10 +11,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.ldurazo.xboxplayerexcercise.R;
-import com.example.ldurazo.xboxplayerexcercise.adapters.SearchAdapter;
+import com.example.ldurazo.xboxplayerexcercise.adapters.DataWrapper;
 import com.example.ldurazo.xboxplayerexcercise.asynctasks.OnSearchTaskCallback;
 import com.example.ldurazo.xboxplayerexcercise.asynctasks.SearchAsyncTask;
 import com.example.ldurazo.xboxplayerexcercise.models.Constants;
+import com.example.ldurazo.xboxplayerexcercise.models.Token;
 import com.example.ldurazo.xboxplayerexcercise.models.Track;
 
 import java.util.ArrayList;
@@ -48,7 +50,7 @@ public class SearchActivity extends Activity implements OnSearchTaskCallback{
             search_query=editText.getText().toString();
             search_query = search_query.replaceAll("\\s+", "+");
             searchType = getSearchType();
-            new SearchAsyncTask(Constants.ACCESS_TOKEN, search_query, searchType, this).execute();
+            new SearchAsyncTask(Token.ACCESS_TOKEN, search_query, searchType, this).execute();
         }else{
             Toast.makeText(SearchActivity.this, "Please introduce a search text", Toast.LENGTH_SHORT).show();
         }
@@ -67,8 +69,8 @@ public class SearchActivity extends Activity implements OnSearchTaskCallback{
 
     @Override
     public void onSearchCompleted(ArrayList<Track> list) {
-        setContentView(R.layout.activity_list);
-        listView = (ListView) findViewById(R.id.listView);
-        listView.setAdapter(new SearchAdapter(getApplicationContext(), list));
+        Intent listIntent = new Intent(SearchActivity.this, ListActivity.class);
+        listIntent.putExtra("List", new DataWrapper(list));
+        startActivity(listIntent);
     }
 }
