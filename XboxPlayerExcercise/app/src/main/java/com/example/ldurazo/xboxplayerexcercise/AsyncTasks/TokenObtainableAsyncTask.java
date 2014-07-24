@@ -36,8 +36,9 @@ public class TokenObtainableAsyncTask extends AsyncTask<Void, Void, String> {
     @Override
     protected void onPostExecute(String result) {
         super.onPostExecute(result);
+        Constants.ACCESS_TOKEN = result;
         if(!result.equals(Constants.ERROR)){
-            callbacks.onTokenReceived(result);
+            callbacks.onTokenReceived(Constants.ACCESS_TOKEN);
         }else{
             callbacks.onTokenNotReceived();
         }

@@ -9,20 +9,23 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.TextView;
 
+import com.example.ldurazo.xboxplayerexcercise.R;
 import com.example.ldurazo.xboxplayerexcercise.asynctasks.OnTokenTaskCallback;
 import com.example.ldurazo.xboxplayerexcercise.asynctasks.TokenObtainableAsyncTask;
 import com.example.ldurazo.xboxplayerexcercise.models.Constants;
-import com.example.ldurazo.xboxplayerexcercise.R;
+import com.example.ldurazo.xboxplayerexcercise.services.RefreshTokenService;
 
 
 public class LauncherActivity extends Activity implements OnTokenTaskCallback{
     ProgressDialog dialog;
     TextView launcherText;
     Animation animation;
+    Intent serviceIntent;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         dialog = new ProgressDialog(LauncherActivity.this);
+        serviceIntent = new Intent(LauncherActivity.this, RefreshTokenService.class);
         dialog.setTitle("Please wait...");
         setContentView(R.layout.activity_launcher);
         new TokenObtainableAsyncTask(this).execute();
@@ -36,16 +39,23 @@ public class LauncherActivity extends Activity implements OnTokenTaskCallback{
     }
 
     @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        this.stopService(serviceIntent);
+    }
+
+    @Override
     public void onTokenReceived(String response) {
         Log.w(Constants.TAG, response);
         if(dialog.isShowing()){
             dialog.dismiss();
         }
-        Intent playerIntent = new Intent(LauncherActivity.this, MainActivity.class);
-        playerIntent.putExtra(Constants.TOKEN, response);
-        startActivity(playerIntent);
-        finish();
+        Constants.TOKEN_TIME = System.currentTimeMillis();
+        Intent searchIntent = new Intent(LauncherActivity.this, SearchActivity.class);
+        this.startService(serviceIntent);
+        startActivity(searchIntent);
     }
+
 
     @Override
     public void onTokenNotReceived() {

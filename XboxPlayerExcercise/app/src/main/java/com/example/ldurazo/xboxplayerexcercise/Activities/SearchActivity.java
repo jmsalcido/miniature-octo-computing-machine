@@ -18,8 +18,7 @@ import com.example.ldurazo.xboxplayerexcercise.models.Track;
 
 import java.util.ArrayList;
 
-public class MainActivity extends Activity implements OnSearchTaskCallback{
-    private String accessToken;
+public class SearchActivity extends Activity implements OnSearchTaskCallback{
     private ListView listView;
     TextView textView;
     EditText editText;
@@ -31,7 +30,6 @@ public class MainActivity extends Activity implements OnSearchTaskCallback{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        accessToken=getIntent().getExtras().getString(Constants.TOKEN);
         initUI();
     }
 
@@ -50,9 +48,9 @@ public class MainActivity extends Activity implements OnSearchTaskCallback{
             search_query=editText.getText().toString();
             search_query = search_query.replaceAll("\\s+", "+");
             searchType = getSearchType();
-            new SearchAsyncTask(accessToken, search_query, searchType, this).execute();
+            new SearchAsyncTask(Constants.ACCESS_TOKEN, search_query, searchType, this).execute();
         }else{
-            Toast.makeText(MainActivity.this, "Please introduce a search text", Toast.LENGTH_SHORT).show();
+            Toast.makeText(SearchActivity.this, "Please introduce a search text", Toast.LENGTH_SHORT).show();
         }
     }
 

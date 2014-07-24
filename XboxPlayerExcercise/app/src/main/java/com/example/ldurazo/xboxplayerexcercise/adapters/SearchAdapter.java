@@ -51,6 +51,7 @@ public class SearchAdapter extends BaseAdapter{
             holder = (ViewHolder) view.getTag();
         }
         holder.text.setText(tracks.get(i).getName());
+        holder.text.setSelected(true);
         return view;
     }
 

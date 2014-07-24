@@ -7,5 +7,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         style="@style/AppTheme"
-        android:id="@+id/listView" />
+        android:id="@+id/listView"
+        android:background="#ff000000"
+        android:divider="@android:drawable/divider_horizontal_dark"
+        android:dividerHeight="@dimen/activity_vertical_margin"
+        android:drawSelectorOnTop="false" />
 </LinearLayout>

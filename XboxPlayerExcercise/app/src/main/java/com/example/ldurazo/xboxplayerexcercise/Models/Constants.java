@@ -20,4 +20,6 @@ public class Constants {
     public static final String ARTISTS="Artists";
     public static final String ALBUMS="Albums";
     public static final String TRACKS="Tracks";
+    public static long TOKEN_TIME;
+    public static String ACCESS_TOKEN;
 }
