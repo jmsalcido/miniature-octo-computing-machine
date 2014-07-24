@@ -30,11 +30,13 @@ public class SearchAsyncTask extends AsyncTask<Void, Void, ArrayList<Track>> {
     private String token;
     private String searchQuery;
     private String searchType;
+    private OnSearchTaskCallback callback;
 
-    public SearchAsyncTask(String token, String searchQuery, String searchType) {
+    public SearchAsyncTask(String token, String searchQuery, String searchType, OnSearchTaskCallback callback) {
         try {
             token = URLEncoder.encode(token, "UTF-8");
             this.token = token;
+            this.callback = callback;
             this.searchQuery=searchQuery;
             this.searchType =searchType;
         } catch (UnsupportedEncodingException e) {
@@ -114,6 +116,7 @@ public class SearchAsyncTask extends AsyncTask<Void, Void, ArrayList<Track>> {
 
     @Override
     protected void onPostExecute(ArrayList<Track> s) {
+        callback.onSearchCompleted(s);
         super.onPostExecute(s);
     }
 }

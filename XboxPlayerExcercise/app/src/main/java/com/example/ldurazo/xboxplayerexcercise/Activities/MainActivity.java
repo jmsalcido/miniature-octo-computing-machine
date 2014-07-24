@@ -4,16 +4,23 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.ldurazo.xboxplayerexcercise.R;
+import com.example.ldurazo.xboxplayerexcercise.adapters.SearchAdapter;
+import com.example.ldurazo.xboxplayerexcercise.asynctasks.OnSearchTaskCallback;
 import com.example.ldurazo.xboxplayerexcercise.asynctasks.SearchAsyncTask;
 import com.example.ldurazo.xboxplayerexcercise.models.Constants;
+import com.example.ldurazo.xboxplayerexcercise.models.Track;
 
-public class MainActivity extends Activity {
+import java.util.ArrayList;
+
+public class MainActivity extends Activity implements OnSearchTaskCallback{
     private String accessToken;
+    private ListView listView;
     TextView textView;
     EditText editText;
     RadioButton artistRadioButton;
@@ -43,7 +50,7 @@ public class MainActivity extends Activity {
             search_query=editText.getText().toString();
             search_query = search_query.replaceAll("\\s+", "+");
             searchType = getSearchType();
-            new SearchAsyncTask(accessToken, search_query, searchType).execute();
+            new SearchAsyncTask(accessToken, search_query, searchType, this).execute();
         }else{
             Toast.makeText(MainActivity.this, "Please introduce a search text", Toast.LENGTH_SHORT).show();
         }
@@ -58,5 +65,12 @@ public class MainActivity extends Activity {
             return Constants.TRACKS;
         }
         return Constants.ARTISTS;
+    }
+
+    @Override
+    public void onSearchCompleted(ArrayList<Track> list) {
+        setContentView(R.layout.activity_list);
+        listView = (ListView) findViewById(R.id.listView);
+        listView.setAdapter(new SearchAdapter(getApplicationContext(), list));
     }
 }
