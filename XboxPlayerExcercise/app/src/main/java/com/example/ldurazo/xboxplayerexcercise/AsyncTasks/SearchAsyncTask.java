@@ -26,12 +26,12 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 
-public class SearchArtistAsyncTask extends AsyncTask<Void, Void, ArrayList<Track>> {
+public class SearchAsyncTask extends AsyncTask<Void, Void, ArrayList<Track>> {
     private String token;
     private String searchQuery;
     private String searchType;
 
-    public SearchArtistAsyncTask(String token, String searchQuery, String searchType) {
+    public SearchAsyncTask(String token, String searchQuery, String searchType) {
         try {
             token = URLEncoder.encode(token, "UTF-8");
             this.token = token;
@@ -55,7 +55,7 @@ public class SearchArtistAsyncTask extends AsyncTask<Void, Void, ArrayList<Track
                     stringBuilder.append(inputLine);
                     Log.w(Constants.TAG, inputLine);
                 }
-                return retrieveArtist(stringBuilder.toString());
+                return retrieveSearchResults(stringBuilder.toString());
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -85,7 +85,7 @@ public class SearchArtistAsyncTask extends AsyncTask<Void, Void, ArrayList<Track
         return null;
     }
 
-    private ArrayList<Track> retrieveArtist(String jsonString){
+    private ArrayList<Track> retrieveSearchResults(String jsonString){
         try {
             ArrayList<Track> resultList= new ArrayList();
             JSONObject parentData = new JSONObject(jsonString);

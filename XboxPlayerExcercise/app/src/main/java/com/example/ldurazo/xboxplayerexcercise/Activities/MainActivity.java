@@ -9,7 +9,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.ldurazo.xboxplayerexcercise.R;
-import com.example.ldurazo.xboxplayerexcercise.asynctasks.SearchArtistAsyncTask;
+import com.example.ldurazo.xboxplayerexcercise.asynctasks.SearchAsyncTask;
 import com.example.ldurazo.xboxplayerexcercise.models.Constants;
 
 public class MainActivity extends Activity {
@@ -43,7 +43,7 @@ public class MainActivity extends Activity {
             search_query=editText.getText().toString();
             search_query = search_query.replaceAll("\\s+", "+");
             searchType = getSearchType();
-            new SearchArtistAsyncTask(accessToken, search_query, searchType).execute();
+            new SearchAsyncTask(accessToken, search_query, searchType).execute();
         }else{
             Toast.makeText(MainActivity.this, "Please introduce a search text", Toast.LENGTH_SHORT).show();
         }
