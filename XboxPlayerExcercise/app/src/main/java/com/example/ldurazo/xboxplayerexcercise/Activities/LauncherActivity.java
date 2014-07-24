@@ -23,6 +23,7 @@ public class LauncherActivity extends Activity implements OnTokenTaskCallback{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         dialog = new ProgressDialog(LauncherActivity.this);
+        dialog.setTitle("Please wait...");
         setContentView(R.layout.activity_launcher);
         new TokenObtainableAsyncTask(this).execute();
         initUI();

@@ -4,6 +4,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.example.ldurazo.xboxplayerexcercise.models.Constants;
+import com.example.ldurazo.xboxplayerexcercise.models.Track;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -25,10 +26,11 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 
-public class SearchArtistAsyncTask extends AsyncTask<Void, Void, ArrayList<Object>> {
+public class SearchArtistAsyncTask extends AsyncTask<Void, Void, ArrayList<Track>> {
     private String token;
     private String searchQuery;
     private String searchType;
+
     public SearchArtistAsyncTask(String token, String searchQuery, String searchType) {
         try {
             token = URLEncoder.encode(token, "UTF-8");
@@ -36,17 +38,15 @@ public class SearchArtistAsyncTask extends AsyncTask<Void, Void, ArrayList<Objec
             this.searchQuery=searchQuery;
             this.searchType =searchType;
         } catch (UnsupportedEncodingException e) {
-            this.token = Constants.ERROR;
-            this.searchQuery=Constants.ERROR;
-            this.searchType =Constants.ERROR;
             e.printStackTrace();
         }
     }
 
     @Override
-    protected ArrayList<Object> doInBackground(Void... voids) {
+    protected ArrayList<Track> doInBackground(Void... voids) {
         try {
             StringBuilder stringBuilder = new StringBuilder();
+            // Calls the search flow to receive the json string
             InputStream inputStream = establishConnection();
             if(inputStream!=null){
                 BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"),8);
@@ -56,18 +56,11 @@ public class SearchArtistAsyncTask extends AsyncTask<Void, Void, ArrayList<Objec
                     Log.w(Constants.TAG, inputLine);
                 }
                 return retrieveArtist(stringBuilder.toString());
-            }else {
-                return Constants.EMPTY_LIST;
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
         return Constants.EMPTY_LIST;
-    }
-
-    @Override
-    protected void onPostExecute(ArrayList<Object> s) {
-        super.onPostExecute(s);
     }
 
     private InputStream establishConnection(){
@@ -92,27 +85,35 @@ public class SearchArtistAsyncTask extends AsyncTask<Void, Void, ArrayList<Objec
         return null;
     }
 
-    private ArrayList<Object> retrieveArtist(String jsonString){
+    private ArrayList<Track> retrieveArtist(String jsonString){
         try {
-            ArrayList<Object> resultList= new ArrayList();
+            ArrayList<Track> resultList= new ArrayList();
             JSONObject parentData = new JSONObject(jsonString);
             if(!parentData.isNull("Error")){
-                Log.w(Constants.TAG, "Made it");
-                return Constants.EMPTY_LIST;
+                Log.e(Constants.TAG, "There was no suitable result");
             }else{
                 JSONObject searchTypeObject = parentData.getJSONObject(searchType);
                 JSONArray searchResults = searchTypeObject.getJSONArray("Items");
                 JSONObject searchObject;
+                Track track;
                 for (int i=0; i<searchResults.length();i++){
                     searchObject = searchResults.getJSONObject(i);
-                    resultList.add(searchObject);
-                    Log.w(Constants.TAG, searchObject.getString("Name"));
+                    track = new Track(searchObject.getString("Id"),
+                            searchObject.getString("Name"),
+                            searchObject.getString("ImageUrl"),
+                            searchType);
+                    resultList.add(track);
                 }
                 return resultList;
             }
         } catch (JSONException e) {
             e.printStackTrace();
-            return Constants.EMPTY_LIST;
         }
+        return Constants.EMPTY_LIST;
+    }
+
+    @Override
+    protected void onPostExecute(ArrayList<Track> s) {
+        super.onPostExecute(s);
     }
 }

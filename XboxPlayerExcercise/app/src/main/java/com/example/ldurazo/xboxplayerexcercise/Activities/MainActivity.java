@@ -14,7 +14,6 @@ import com.example.ldurazo.xboxplayerexcercise.models.Constants;
 
 public class MainActivity extends Activity {
     private String accessToken;
-    private String searchType=Constants.ARTISTS;
     TextView textView;
     EditText editText;
     RadioButton artistRadioButton;
@@ -39,7 +38,8 @@ public class MainActivity extends Activity {
 
     public void searchArtist(View v){
         String search_query;
-        if(!editText.getText().toString().equals(null) && !editText.getText().toString().equals("")){
+        String searchType;
+        if(!editText.getText().toString().equals(Constants.EMPTY_STRING)){
             search_query=editText.getText().toString();
             search_query = search_query.replaceAll("\\s+", "+");
             searchType = getSearchType();
