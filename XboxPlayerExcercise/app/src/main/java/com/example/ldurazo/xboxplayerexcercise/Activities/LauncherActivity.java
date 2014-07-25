@@ -1,6 +1,5 @@
 package com.example.ldurazo.xboxplayerexcercise.activities;
 
-import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.app.ProgressDialog;
@@ -19,7 +18,7 @@ import com.example.ldurazo.xboxplayerexcercise.models.Constants;
 import com.example.ldurazo.xboxplayerexcercise.models.Token;
 
 
-public class LauncherActivity extends Activity implements OnTokenTaskCallback{
+public class LauncherActivity extends BaseActivity implements OnTokenTaskCallback{
     private ProgressDialog dialog;
     private TextView launcherText;
     private Animation animation;
@@ -30,12 +29,14 @@ public class LauncherActivity extends Activity implements OnTokenTaskCallback{
         super.onCreate(savedInstanceState);
         dialog = new ProgressDialog(LauncherActivity.this);
         dialog.setTitle("Please wait...");
+        dialog.setProgressStyle(R.style.AppTheme);
         setContentView(R.layout.activity_launcher);
         new TokenObtainableAsyncTask(this).execute();
         initUI();
     }
 
-    private void initUI(){
+    @Override
+    protected void initUI(){
         launcherText = (TextView) findViewById(R.id.launchText);
         animation = AnimationUtils.loadAnimation(LauncherActivity.this, R.anim.blink);
         launcherText.startAnimation(animation);

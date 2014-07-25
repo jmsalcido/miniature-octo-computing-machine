@@ -7,6 +7,6 @@ import android.content.Intent;
 public class TokenRefreshBroadcastReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
-        
+
     }
 }

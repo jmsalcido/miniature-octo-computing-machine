@@ -1,6 +1,5 @@
 package com.example.ldurazo.xboxplayerexcercise.activities;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -20,7 +19,7 @@ import com.example.ldurazo.xboxplayerexcercise.models.Track;
 
 import java.util.ArrayList;
 
-public class SearchActivity extends Activity implements OnSearchTaskCallback{
+public class SearchActivity extends BaseActivity implements OnSearchTaskCallback{
     private ListView listView;
     TextView textView;
     EditText editText;
@@ -35,7 +34,8 @@ public class SearchActivity extends Activity implements OnSearchTaskCallback{
         initUI();
     }
 
-    private void initUI(){
+    @Override
+    protected void initUI(){
         textView = (TextView) findViewById(R.id.textView);
         editText = (EditText) findViewById(R.id.editText);
         artistRadioButton = (RadioButton) findViewById(R.id.artist_radio_button);

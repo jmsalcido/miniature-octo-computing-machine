@@ -28,7 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class TokenObtainableAsyncTask extends AsyncTask<Void, Void, String> {
+public class TokenObtainableAsyncTask extends AsyncTask<Void, Void, String>{
     private OnTokenTaskCallback callbacks;
     public TokenObtainableAsyncTask(OnTokenTaskCallback callbacks) {
         this.callbacks = callbacks;
@@ -77,6 +77,7 @@ public class TokenObtainableAsyncTask extends AsyncTask<Void, Void, String> {
             HttpClient client = new DefaultHttpClient(httpParameters);
             HttpPost request = new HttpPost(Constants.SERVICE);
             request.setHeader("Content_type", Constants.CONTENT_TYPE);
+            request.setHeader("Accept", "application/json");
             List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(4);
             nameValuePairs.add(new BasicNameValuePair("client_id",Constants.CLIENT_ID));
             nameValuePairs.add(new BasicNameValuePair("client_secret",Constants.CLIENT_SECRET));
