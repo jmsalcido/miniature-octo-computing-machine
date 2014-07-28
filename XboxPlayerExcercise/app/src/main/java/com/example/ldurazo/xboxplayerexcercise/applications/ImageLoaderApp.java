@@ -14,8 +14,8 @@ public class ImageLoaderApp extends Application {
 
         //Create ImageLoaderConfiguration
         ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(this)
-                .diskCacheFileCount(150)
-                .diskCacheExtraOptions(800, 480, null)
+                .diskCacheFileCount(50)
+                .diskCacheExtraOptions(2000,2000,null)
                 .writeDebugLogs()
                 .build();
 
