@@ -5,23 +5,25 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.ldurazo.xboxplayerexcercise.R;
 import com.example.ldurazo.xboxplayerexcercise.models.Track;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
 
-/**
- * Created by ldurazo on 7/23/2014 and 5:29 PM and 5:29 PM.
- */
+
 public class SearchAdapter extends BaseAdapter{
     private ArrayList<Track> tracks;
     private LayoutInflater inflater;
+    private ImageLoader imageLoader;
 
     public SearchAdapter(Context context, ArrayList<Track> tracks) {
         inflater = LayoutInflater.from(context);
         this.tracks = tracks;
+        imageLoader = ImageLoader.getInstance();
     }
 
     @Override
@@ -46,16 +48,19 @@ public class SearchAdapter extends BaseAdapter{
             view = inflater.inflate(R.layout.row_view, null);
             holder = new ViewHolder();
             holder.text = (TextView) view.findViewById(R.id.textView);
+            holder.imageView = (ImageView) view.findViewById(R.id.imageView);
             view.setTag(holder);
         }else{
             holder = (ViewHolder) view.getTag();
         }
         holder.text.setText(tracks.get(i).getName());
+        imageLoader.displayImage(tracks.get(i).getImageURL(), holder.imageView);
         holder.text.setSelected(true);
         return view;
     }
 
     private class ViewHolder{
         TextView text;
+        ImageView imageView;
     }
 }
