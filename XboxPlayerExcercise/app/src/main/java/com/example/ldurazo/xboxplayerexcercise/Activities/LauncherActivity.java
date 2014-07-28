@@ -56,7 +56,7 @@ public class LauncherActivity extends BaseActivity implements OnTokenTaskCallbac
         if (dialog.isShowing()) {
             dialog.dismiss();
         }
-        Token.TOKEN_EXPIRE_TIME = System.currentTimeMillis()+5000;
+        Token.TOKEN_EXPIRE_TIME = System.currentTimeMillis()+600000;
         Intent tokenRefreshIntent = new Intent(this, TokenRefreshBroadcastReceiver.class);
         tokenRefreshPendingIntent = PendingIntent.getBroadcast
                 (LauncherActivity.this, 0, tokenRefreshIntent, PendingIntent.FLAG_ONE_SHOT);
