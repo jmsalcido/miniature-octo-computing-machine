@@ -54,7 +54,7 @@ public class SearchAdapter extends BaseAdapter{
             holder = (ViewHolder) view.getTag();
         }
         holder.text.setText(tracks.get(i).getName());
-        imageLoader.displayImage(tracks.get(i).getImageURL(), holder.imageView);
+        imageLoader.displayImage(tracks.get(i).getImageURL()+"&w=100&h=100", holder.imageView);
         holder.text.setSelected(true);
         return view;
     }
