@@ -4,6 +4,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.example.ldurazo.xboxplayerexcercise.models.Constants;
+import com.example.ldurazo.xboxplayerexcercise.models.Session;
 import com.example.ldurazo.xboxplayerexcercise.models.Track;
 
 import org.apache.http.HttpEntity;
@@ -27,6 +28,7 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 
 public class SearchAsyncTask extends AsyncTask<Void, Void, ArrayList<Track>> {
+    private static final String TAG = "com.example.ldurazo.xboxplayerexcercise.asynctasks";
     private String token;
     private String searchQuery;
     private String searchType;
@@ -55,7 +57,7 @@ public class SearchAsyncTask extends AsyncTask<Void, Void, ArrayList<Track>> {
                 String inputLine;
                 while((inputLine=bufferedReader.readLine())!=null){
                     stringBuilder.append(inputLine);
-                    Log.w(Constants.TAG, inputLine);
+                    Log.w(TAG, inputLine);
                 }
                 return retrieveSearchResults(stringBuilder.toString());
             }
@@ -73,8 +75,8 @@ public class SearchAsyncTask extends AsyncTask<Void, Void, ArrayList<Track>> {
             HttpConnectionParams.setSoTimeout(httpParameters, timeoutSocket);
             HttpConnectionParams.setConnectionTimeout(httpParameters, timeoutConnection);
             HttpClient client = new DefaultHttpClient(httpParameters);
-            String query = Constants.SCOPE_SERVICE+"/1/content/music/search?q="+searchQuery+"&accessToken=Bearer+"+token;
-            Log.w(Constants.TAG,query);
+            String query = Session.SCOPE_SERVICE+"/1/content/music/search?q="+searchQuery+"&accessToken=Bearer+"+token;
+            Log.w(TAG,query);
             HttpGet request = new HttpGet(query);
             request.setHeader("Accept", "application/json");
             request.setHeader("Content-type", "application/json");

@@ -12,6 +12,10 @@ public class Track implements Serializable{
     private String imageURL;
     private String type;
 
+    public static final String ARTISTS="Artists";
+    public static final String ALBUMS="Albums";
+    public static final String TRACKS="Tracks";
+
     public Track(String id, String name, String imageURL, String TAG) {
         Id = id;
         this.name = name;

@@ -4,7 +4,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.example.ldurazo.xboxplayerexcercise.models.Constants;
-import com.example.ldurazo.xboxplayerexcercise.models.Token;
+import com.example.ldurazo.xboxplayerexcercise.models.Session;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -37,9 +37,9 @@ public class TokenObtainableAsyncTask extends AsyncTask<Void, Void, String>{
     @Override
     protected void onPostExecute(String result) {
         super.onPostExecute(result);
-        Token.ACCESS_TOKEN = result;
+        Session.setAccessToken(result);
         if(!result.equals(Constants.ERROR)){
-            callbacks.onTokenReceived(Token.ACCESS_TOKEN);
+            callbacks.onTokenReceived(Session.getAccessToken());
         }else{
             callbacks.onTokenNotReceived();
         }
@@ -70,19 +70,19 @@ public class TokenObtainableAsyncTask extends AsyncTask<Void, Void, String>{
     private InputStream establishConnection(){
         try {
             HttpParams httpParameters = new BasicHttpParams();
-            int timeoutConnection = 10000; //Timeout until a connection is established.
-            int timeoutSocket = 10000; //Timeout for waiting for data.
+            int timeoutConnection = 5000; //Timeout until a connection is established.
+            int timeoutSocket = 50000; //Timeout for waiting for data.
             HttpConnectionParams.setSoTimeout(httpParameters, timeoutSocket);
             HttpConnectionParams.setConnectionTimeout(httpParameters, timeoutConnection);
             HttpClient client = new DefaultHttpClient(httpParameters);
-            HttpPost request = new HttpPost(Constants.SERVICE);
-            request.setHeader("Content_type", Constants.CONTENT_TYPE);
+            HttpPost request = new HttpPost(Session.SERVICE);
+            request.setHeader("Content_type", Session.CONTENT_TYPE);
             request.setHeader("Accept", "application/json");
             List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(4);
-            nameValuePairs.add(new BasicNameValuePair("client_id",Constants.CLIENT_ID));
-            nameValuePairs.add(new BasicNameValuePair("client_secret",Constants.CLIENT_SECRET));
-            nameValuePairs.add(new BasicNameValuePair("scope",Constants.SCOPE));
-            nameValuePairs.add(new BasicNameValuePair("grant_type",Constants.GRANT_TYPE));
+            nameValuePairs.add(new BasicNameValuePair("client_id", Session.CLIENT_ID));
+            nameValuePairs.add(new BasicNameValuePair("client_secret",Session.CLIENT_SECRET));
+            nameValuePairs.add(new BasicNameValuePair("scope",Session.SCOPE));
+            nameValuePairs.add(new BasicNameValuePair("grant_type",Session.GRANT_TYPE));
             request.setEntity(new UrlEncodedFormEntity(nameValuePairs));
             HttpResponse response = client.execute(request);
             HttpEntity entity = response.getEntity();

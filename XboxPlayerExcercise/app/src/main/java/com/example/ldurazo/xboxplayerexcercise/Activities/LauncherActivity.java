@@ -15,7 +15,7 @@ import com.example.ldurazo.xboxplayerexcercise.adapters.TokenRefreshBroadcastRec
 import com.example.ldurazo.xboxplayerexcercise.asynctasks.OnTokenTaskCallback;
 import com.example.ldurazo.xboxplayerexcercise.asynctasks.TokenObtainableAsyncTask;
 import com.example.ldurazo.xboxplayerexcercise.models.Constants;
-import com.example.ldurazo.xboxplayerexcercise.models.Token;
+import com.example.ldurazo.xboxplayerexcercise.models.Session;
 
 
 public class LauncherActivity extends BaseActivity implements OnTokenTaskCallback{
@@ -27,12 +27,21 @@ public class LauncherActivity extends BaseActivity implements OnTokenTaskCallbac
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_launcher);
+        initToken();
+        initVars();
+        initUI();
+    }
+
+    protected void initToken(){
+        new TokenObtainableAsyncTask(this).execute();
+    }
+
+    @Override
+    protected void initVars() {
         dialog = new ProgressDialog(LauncherActivity.this);
         dialog.setTitle("Please wait...");
         dialog.setProgressStyle(R.style.AppTheme);
-        setContentView(R.layout.activity_launcher);
-        new TokenObtainableAsyncTask(this).execute();
-        initUI();
     }
 
     @Override
@@ -56,12 +65,12 @@ public class LauncherActivity extends BaseActivity implements OnTokenTaskCallbac
         if (dialog.isShowing()) {
             dialog.dismiss();
         }
-        Token.TOKEN_EXPIRE_TIME = System.currentTimeMillis()+600000;
+        Session.setTokenExpireTime(System.currentTimeMillis()+600000);
         Intent tokenRefreshIntent = new Intent(this, TokenRefreshBroadcastReceiver.class);
         tokenRefreshPendingIntent = PendingIntent.getBroadcast
                 (LauncherActivity.this, 0, tokenRefreshIntent, PendingIntent.FLAG_ONE_SHOT);
         alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-        alarmManager.set(AlarmManager.RTC, Token.TOKEN_EXPIRE_TIME, tokenRefreshPendingIntent);
+        alarmManager.set(AlarmManager.RTC, Session.getTokenExpireTime(), tokenRefreshPendingIntent);
 
         Intent searchIntent = new Intent(LauncherActivity.this, SearchActivity.class);
         startActivity(searchIntent);
