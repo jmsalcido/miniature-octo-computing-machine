@@ -8,5 +8,5 @@ import java.util.ArrayList;
  * Created by ldurazo on 7/23/2014 and 5:55 PM.
  */
 public interface OnSearchTaskCallback {
-    public void onSearchCompleted(ArrayList<Track> list);
+    public void onSearchCompleted(ArrayList<Track> list, int errorFlag);
 }

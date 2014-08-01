@@ -14,11 +14,11 @@ import com.example.ldurazo.xboxplayerexcercise.R;
 import com.example.ldurazo.xboxplayerexcercise.adapters.TokenRefreshBroadcastReceiver;
 import com.example.ldurazo.xboxplayerexcercise.asynctasks.OnTokenTaskCallback;
 import com.example.ldurazo.xboxplayerexcercise.asynctasks.TokenObtainableAsyncTask;
-import com.example.ldurazo.xboxplayerexcercise.models.Constants;
-import com.example.ldurazo.xboxplayerexcercise.models.Session;
+import com.example.ldurazo.xboxplayerexcercise.models.AppSession;
 
 
 public class LauncherActivity extends BaseActivity implements OnTokenTaskCallback{
+    private static final String TAG = "com.example.ldurazo.xboxplayerexcercise.activities.baseactivity";
     private ProgressDialog dialog;
     private TextView launcherText;
     private Animation animation;
@@ -61,17 +61,16 @@ public class LauncherActivity extends BaseActivity implements OnTokenTaskCallbac
 
     @Override
     public void onTokenReceived(String response) {
-        Log.w(Constants.TAG, response);
+        Log.w(TAG, response);
         if (dialog.isShowing()) {
             dialog.dismiss();
         }
-        Session.setTokenExpireTime(System.currentTimeMillis()+600000);
+        AppSession.getInstance().setTokenExpireTime(System.currentTimeMillis() + (1000 * 60 * 10));
         Intent tokenRefreshIntent = new Intent(this, TokenRefreshBroadcastReceiver.class);
         tokenRefreshPendingIntent = PendingIntent.getBroadcast
-                (LauncherActivity.this, 0, tokenRefreshIntent, PendingIntent.FLAG_ONE_SHOT);
+                (LauncherActivity.this, 0, tokenRefreshIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-        alarmManager.set(AlarmManager.RTC, Session.getTokenExpireTime(), tokenRefreshPendingIntent);
-
+        alarmManager.setRepeating(AlarmManager.RTC, AppSession.getInstance().getTokenExpireTime(), 1000 * 60 * 10, tokenRefreshPendingIntent);
         Intent searchIntent = new Intent(LauncherActivity.this, SearchActivity.class);
         startActivity(searchIntent);
     }

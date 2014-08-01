@@ -23,7 +23,7 @@ import com.example.ldurazo.xboxplayerexcercise.adapters.SearchAdapter;
 import com.example.ldurazo.xboxplayerexcercise.asynctasks.OnSearchTaskCallback;
 import com.example.ldurazo.xboxplayerexcercise.asynctasks.SearchAsyncTask;
 import com.example.ldurazo.xboxplayerexcercise.models.Constants;
-import com.example.ldurazo.xboxplayerexcercise.models.Session;
+import com.example.ldurazo.xboxplayerexcercise.models.AppSession;
 import com.example.ldurazo.xboxplayerexcercise.models.Track;
 
 import java.io.UnsupportedEncodingException;
@@ -41,6 +41,7 @@ public class SearchActivity extends BaseActivity implements OnSearchTaskCallback
     private ListView listView;
     private InputMethodManager imm;
     private Track mTrack;
+    private SearchAsyncTask searchAsyncTask;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +54,7 @@ public class SearchActivity extends BaseActivity implements OnSearchTaskCallback
     @Override
     protected void initVars() {
         dialog = new ProgressDialog(SearchActivity.this);
+        dialog.setProgressStyle(R.style.AppTheme);
         imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
     }
 
@@ -96,7 +98,10 @@ public class SearchActivity extends BaseActivity implements OnSearchTaskCallback
                 e.printStackTrace();
             }
             searchType = getSearchType();
-            new SearchAsyncTask(Session.accessToken, search_query, searchType, this).execute();
+            // this is hardcoded access token for testing purposes, use it instead of AppSession.getInstance().getAccessToken()
+            // http%253a%252f%252fschemas.xmlsoap.org%252fws%252f2005%252f05%252fidentity%252fclaims%252fnameidentifier%3Dmusicplayer_internship_ldurazo%26http%253a%252f%252fschemas.microsoft.com%252faccesscontrolservice%252f2010%252f07%252fclaims%252fidentityprovider%3Dhttps%253a%252f%252fdatamarket.accesscontrol.windows.net%252f%26Audience%3Dhttp%253a%252f%252fmusic.xboxlive.com%26ExpiresOn%3D1406831538%26Issuer%3Dhttps%253a%252f%252fdatamarket.accesscontrol.windows.net%252f%26HMACSHA256%3DIbUBiV9cxaxmORMnCU38%252b1jiJlDV2fUHLOX0CF6rDGo%253d
+            searchAsyncTask = new SearchAsyncTask(AppSession.getInstance().getAccessToken(), search_query, searchType, this);
+            searchAsyncTask.execute();
         } else {
             hideDialog();
             Toast.makeText(SearchActivity.this, "Please introduce a search text", Toast.LENGTH_SHORT).show();
@@ -117,12 +122,10 @@ public class SearchActivity extends BaseActivity implements OnSearchTaskCallback
     }
 
     @Override
-    public void onSearchCompleted(ArrayList<Track> list) {
+    public void onSearchCompleted(ArrayList<Track> list, int errorFlag) {
         hideDialog();
         if (list != null) {
             listView.setAdapter(new SearchAdapter(SearchActivity.this, list));
-        } else {
-            Toast.makeText(SearchActivity.this, "No suitable results for your search", Toast.LENGTH_SHORT).show();
         }
 
     }

@@ -3,10 +3,11 @@ package com.example.ldurazo.xboxplayerexcercise.asynctasks;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.example.ldurazo.xboxplayerexcercise.models.AppSession;
 import com.example.ldurazo.xboxplayerexcercise.models.Constants;
-import com.example.ldurazo.xboxplayerexcercise.models.Session;
 import com.example.ldurazo.xboxplayerexcercise.models.Track;
 
+import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -26,6 +27,7 @@ import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.zip.GZIPInputStream;
 
 public class SearchAsyncTask extends AsyncTask<Void, Void, ArrayList<Track>> {
     private static final String TAG = "com.example.ldurazo.xboxplayerexcercise.asynctasks";
@@ -53,7 +55,7 @@ public class SearchAsyncTask extends AsyncTask<Void, Void, ArrayList<Track>> {
             // Calls the search flow to receive the json string
             InputStream inputStream = establishConnection();
             if(inputStream!=null){
-                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"),8);
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"),24);
                 String inputLine;
                 while((inputLine=bufferedReader.readLine())!=null){
                     stringBuilder.append(inputLine);
@@ -75,13 +77,19 @@ public class SearchAsyncTask extends AsyncTask<Void, Void, ArrayList<Track>> {
             HttpConnectionParams.setSoTimeout(httpParameters, timeoutSocket);
             HttpConnectionParams.setConnectionTimeout(httpParameters, timeoutConnection);
             HttpClient client = new DefaultHttpClient(httpParameters);
-            String query = Session.SCOPE_SERVICE+"/1/content/music/search?q="+searchQuery+"&accessToken=Bearer+"+token;
+            String query = AppSession.SCOPE_SERVICE+"/1/content/music/search?q="+searchQuery+"&accessToken=Bearer+"+token;
             Log.w(TAG,query);
             HttpGet request = new HttpGet(query);
             request.setHeader("Accept", "application/json");
             request.setHeader("Content-type", "application/json");
             HttpResponse response = client.execute(request);
             HttpEntity entity = response.getEntity();
+            Header contentEncoding = response.getFirstHeader("Content-Encoding");
+            if (contentEncoding != null && contentEncoding.getValue().equalsIgnoreCase("gzip")) {
+                InputStream instream = response.getEntity().getContent();
+                instream = new GZIPInputStream(instream);
+                return instream;
+            }
             return entity.getContent();
         } catch (IOException e) {
             e.printStackTrace();
@@ -94,7 +102,12 @@ public class SearchAsyncTask extends AsyncTask<Void, Void, ArrayList<Track>> {
             ArrayList<Track> resultList= new ArrayList();
             JSONObject parentData = new JSONObject(jsonString);
             if(!parentData.isNull("Error")){
-                Log.e(Constants.TAG, "There was no suitable result");
+                String errorCode = parentData.getJSONObject("Error").getString("ErrorCode");
+                if(errorCode.equals("ACCESS_TOKEN_EXPIRED")){
+
+                }if(errorCode.equals("CATALOG_NO_RESULT")){
+
+                }
             }else{
                 JSONObject searchTypeObject = parentData.getJSONObject(searchType);
                 JSONArray searchResults = searchTypeObject.getJSONArray("Items");
@@ -116,9 +129,10 @@ public class SearchAsyncTask extends AsyncTask<Void, Void, ArrayList<Track>> {
         return Constants.EMPTY_LIST;
     }
 
+
     @Override
-    protected void onPostExecute(ArrayList<Track> s) {
-        callback.onSearchCompleted(s);
-        super.onPostExecute(s);
+    protected void onPostExecute(ArrayList<Track> list) {
+        callback.onSearchCompleted(list, 0);
+        super.onPostExecute(list);
     }
 }

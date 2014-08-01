@@ -8,7 +8,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.Volley;
 import com.example.ldurazo.xboxplayerexcercise.R;
-import com.example.ldurazo.xboxplayerexcercise.models.Session;
+import com.example.ldurazo.xboxplayerexcercise.models.AppSession;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
@@ -50,10 +50,13 @@ public class BaseApp extends Application {
 
         //Initialize ImageLoader with configuration
         ImageLoader.getInstance().init(config);
+
+        //Initialize custom singletons
+        initSingletons();
     }
 
     protected void initSingletons(){
-        Session.initInstance();
+        AppSession.initInstance();
     }
 
     /**
