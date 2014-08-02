@@ -22,6 +22,6 @@ public class TokenRefreshBroadcastReceiver extends BroadcastReceiver implements 
 
     @Override
     public void onTokenNotReceived() {
-
+        // TODO handle the token problems
     }
 }

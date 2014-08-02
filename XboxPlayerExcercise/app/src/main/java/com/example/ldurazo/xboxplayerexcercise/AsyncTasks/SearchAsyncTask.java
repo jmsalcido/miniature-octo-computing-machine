@@ -35,6 +35,7 @@ public class SearchAsyncTask extends AsyncTask<Void, Void, ArrayList<Track>> {
     private String searchQuery;
     private String searchType;
     private OnSearchTaskCallback callback;
+    private int searchFlag = 0;
 
     public SearchAsyncTask(String token, String searchQuery, String searchType, OnSearchTaskCallback callback) {
         try {
@@ -86,9 +87,9 @@ public class SearchAsyncTask extends AsyncTask<Void, Void, ArrayList<Track>> {
             HttpEntity entity = response.getEntity();
             Header contentEncoding = response.getFirstHeader("Content-Encoding");
             if (contentEncoding != null && contentEncoding.getValue().equalsIgnoreCase("gzip")) {
-                InputStream instream = response.getEntity().getContent();
-                instream = new GZIPInputStream(instream);
-                return instream;
+                InputStream inputStream = response.getEntity().getContent();
+                inputStream = new GZIPInputStream(inputStream);
+                return inputStream;
             }
             return entity.getContent();
         } catch (IOException e) {
@@ -103,10 +104,13 @@ public class SearchAsyncTask extends AsyncTask<Void, Void, ArrayList<Track>> {
             JSONObject parentData = new JSONObject(jsonString);
             if(!parentData.isNull("Error")){
                 String errorCode = parentData.getJSONObject("Error").getString("ErrorCode");
+                Log.w(TAG, errorCode);
                 if(errorCode.equals("ACCESS_TOKEN_EXPIRED")){
-
+                    searchFlag=1;
+                    Log.w(TAG, String.valueOf(searchFlag));
                 }if(errorCode.equals("CATALOG_NO_RESULT")){
-
+                    searchFlag=2;
+                    Log.w(TAG, String.valueOf(searchFlag));
                 }
             }else{
                 JSONObject searchTypeObject = parentData.getJSONObject(searchType);
@@ -132,7 +136,7 @@ public class SearchAsyncTask extends AsyncTask<Void, Void, ArrayList<Track>> {
 
     @Override
     protected void onPostExecute(ArrayList<Track> list) {
-        callback.onSearchCompleted(list, 0);
+        callback.onSearchCompleted(list, searchFlag);
         super.onPostExecute(list);
     }
 }

@@ -19,6 +19,7 @@ public class SearchAdapter extends BaseAdapter{
     private ArrayList<Track> tracks;
     private LayoutInflater inflater;
     private ImageLoader imageLoader;
+    private static final String TAG = "com.example.ldurazo.xboxplayerexcercise.adapters.SearchAdapter";
 
     public SearchAdapter(Context context, ArrayList<Track> tracks) {
         inflater = LayoutInflater.from(context);

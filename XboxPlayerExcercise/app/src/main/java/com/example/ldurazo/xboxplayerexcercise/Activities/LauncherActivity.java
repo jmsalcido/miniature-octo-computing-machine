@@ -1,8 +1,10 @@
 package com.example.ldurazo.xboxplayerexcercise.activities;
 
 import android.app.AlarmManager;
+import android.app.AlertDialog;
 import android.app.PendingIntent;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -24,6 +26,16 @@ public class LauncherActivity extends BaseActivity implements OnTokenTaskCallbac
     private Animation animation;
     private PendingIntent tokenRefreshPendingIntent;
     private AlarmManager alarmManager;
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(AppSession.getInstance().getAccessToken() != null){
+            Intent searchIntent = new Intent(LauncherActivity.this, SearchActivity.class);
+            startActivity(searchIntent);
+        }
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,7 +53,6 @@ public class LauncherActivity extends BaseActivity implements OnTokenTaskCallbac
     protected void initVars() {
         dialog = new ProgressDialog(LauncherActivity.this);
         dialog.setTitle("Please wait...");
-        dialog.setProgressStyle(R.style.AppTheme);
     }
 
     @Override
@@ -65,12 +76,13 @@ public class LauncherActivity extends BaseActivity implements OnTokenTaskCallbac
         if (dialog.isShowing()) {
             dialog.dismiss();
         }
-        AppSession.getInstance().setTokenExpireTime(System.currentTimeMillis() + (1000 * 60 * 10));
+        AppSession.getInstance().setAccessToken(response);
+        AppSession.getInstance().setTokenExpireTime(System.currentTimeMillis() + (1000 * 60 * 9));
         Intent tokenRefreshIntent = new Intent(this, TokenRefreshBroadcastReceiver.class);
         tokenRefreshPendingIntent = PendingIntent.getBroadcast
                 (LauncherActivity.this, 0, tokenRefreshIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-        alarmManager.setRepeating(AlarmManager.RTC, AppSession.getInstance().getTokenExpireTime(), 1000 * 60 * 10, tokenRefreshPendingIntent);
+        alarmManager.setRepeating(AlarmManager.RTC, AppSession.getInstance().getTokenExpireTime(), 1000 * 60 * 9, tokenRefreshPendingIntent);
         Intent searchIntent = new Intent(LauncherActivity.this, SearchActivity.class);
         startActivity(searchIntent);
     }
@@ -81,6 +93,13 @@ public class LauncherActivity extends BaseActivity implements OnTokenTaskCallbac
         if(!dialog.isShowing()){
             dialog.show();
         }
-        new TokenObtainableAsyncTask(this).execute();
+        AlertDialog.Builder builder = new AlertDialog.Builder(LauncherActivity.this);
+        builder.setMessage("We cannot connect to the service right now")
+                .setNeutralButton("Ok", new DialogInterface.OnClickListener(){
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        finish();
+                    }
+                });
     }
 }

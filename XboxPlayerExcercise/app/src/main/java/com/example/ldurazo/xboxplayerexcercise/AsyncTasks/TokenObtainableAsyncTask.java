@@ -39,9 +39,8 @@ public class TokenObtainableAsyncTask extends AsyncTask<Void, Void, String>{
     @Override
     protected void onPostExecute(String result) {
         super.onPostExecute(result);
-        AppSession.getInstance().setAccessToken(result);
         if(!result.equals(Constants.ERROR)){
-            callbacks.onTokenReceived(AppSession.getInstance().getAccessToken());
+            callbacks.onTokenReceived(result);
         }else{
             callbacks.onTokenNotReceived();
         }
