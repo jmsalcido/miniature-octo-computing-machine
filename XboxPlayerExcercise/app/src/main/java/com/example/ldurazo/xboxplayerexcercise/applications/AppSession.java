@@ -1,4 +1,4 @@
-package com.example.ldurazo.xboxplayerexcercise.models;
+package com.example.ldurazo.xboxplayerexcercise.applications;
 
 /**
  * Created by ldurazo on 7/24/2014 and 2:12 PM.
@@ -29,6 +29,7 @@ public class AppSession {
 
     public static AppSession getInstance() {
         // Return the instance
+
         return instance;
     }
 

@@ -3,8 +3,8 @@ package com.example.ldurazo.xboxplayerexcercise.asynctasks;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.example.ldurazo.xboxplayerexcercise.models.Constants;
-import com.example.ldurazo.xboxplayerexcercise.models.AppSession;
+import com.example.ldurazo.xboxplayerexcercise.utils.Constants;
+import com.example.ldurazo.xboxplayerexcercise.applications.AppSession;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -30,9 +30,9 @@ import java.util.List;
 
 public class TokenObtainableAsyncTask extends AsyncTask<Void, Void, String>{
     private static final String TAG = "com.example.ldurazo.xboxplayerexcercise.asynctasks.tokenobtainableasynctask";
-    private OnTokenTaskCallback callbacks;
+    private TokenTaskCallback callbacks;
 
-    public TokenObtainableAsyncTask(OnTokenTaskCallback callbacks) {
+    public TokenObtainableAsyncTask(TokenTaskCallback callbacks) {
         this.callbacks = callbacks;
     }
 

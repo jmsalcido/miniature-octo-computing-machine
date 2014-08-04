@@ -13,13 +13,13 @@ import android.view.animation.AnimationUtils;
 import android.widget.TextView;
 
 import com.example.ldurazo.xboxplayerexcercise.R;
-import com.example.ldurazo.xboxplayerexcercise.adapters.TokenRefreshBroadcastReceiver;
-import com.example.ldurazo.xboxplayerexcercise.asynctasks.OnTokenTaskCallback;
+import com.example.ldurazo.xboxplayerexcercise.applications.AppSession;
 import com.example.ldurazo.xboxplayerexcercise.asynctasks.TokenObtainableAsyncTask;
-import com.example.ldurazo.xboxplayerexcercise.models.AppSession;
+import com.example.ldurazo.xboxplayerexcercise.asynctasks.TokenTaskCallback;
+import com.example.ldurazo.xboxplayerexcercise.controllers.TokenRefreshBroadcastReceiver;
 
 
-public class LauncherActivity extends BaseActivity implements OnTokenTaskCallback{
+public class LauncherActivity extends BaseActivity implements TokenTaskCallback {
     private static final String TAG = "com.example.ldurazo.xboxplayerexcercise.activities.baseactivity";
     private ProgressDialog dialog;
     private TextView launcherText;

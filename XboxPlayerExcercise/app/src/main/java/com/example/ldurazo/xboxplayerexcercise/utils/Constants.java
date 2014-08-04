@@ -1,5 +1,7 @@
-package com.example.ldurazo.xboxplayerexcercise.models;
+package com.example.ldurazo.xboxplayerexcercise.utils;
 
+
+import com.example.ldurazo.xboxplayerexcercise.models.Track;
 
 import java.util.ArrayList;
 

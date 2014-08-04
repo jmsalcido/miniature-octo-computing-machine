@@ -11,7 +11,7 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
-        <receiver android:name=".adapters.TokenRefreshBroadcastReceiver" >
+        <receiver android:name=".controllers.TokenRefreshBroadcastReceiver" >
         </receiver>
 
         <activity
@@ -32,11 +32,12 @@
         </activity>
         <activity
             android:name=".activities.MusicPlayer"
+            android:screenOrientation="portrait"
             android:label="@string/title_activity_music_player" >
         </activity>
 
         <service
-            android:name=".services.MusicService"
+            android:name=".controllers.MusicService"
             android:enabled="true"
             android:exported="true" >
         </service>

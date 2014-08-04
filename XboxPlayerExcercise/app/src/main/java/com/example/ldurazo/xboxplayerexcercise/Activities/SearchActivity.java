@@ -20,19 +20,19 @@ import android.widget.Toast;
 import com.example.ldurazo.xboxplayerexcercise.R;
 import com.example.ldurazo.xboxplayerexcercise.adapters.DataWrapper;
 import com.example.ldurazo.xboxplayerexcercise.adapters.SearchAdapter;
-import com.example.ldurazo.xboxplayerexcercise.asynctasks.OnSearchTaskCallback;
-import com.example.ldurazo.xboxplayerexcercise.asynctasks.OnTokenTaskCallback;
+import com.example.ldurazo.xboxplayerexcercise.asynctasks.SearchTaskCallback;
+import com.example.ldurazo.xboxplayerexcercise.asynctasks.TokenTaskCallback;
 import com.example.ldurazo.xboxplayerexcercise.asynctasks.SearchAsyncTask;
 import com.example.ldurazo.xboxplayerexcercise.asynctasks.TokenObtainableAsyncTask;
-import com.example.ldurazo.xboxplayerexcercise.models.AppSession;
-import com.example.ldurazo.xboxplayerexcercise.models.Constants;
+import com.example.ldurazo.xboxplayerexcercise.applications.AppSession;
+import com.example.ldurazo.xboxplayerexcercise.utils.Constants;
 import com.example.ldurazo.xboxplayerexcercise.models.Track;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 
-public class SearchActivity extends BaseActivity implements OnSearchTaskCallback {
+public class SearchActivity extends BaseActivity implements SearchTaskCallback {
     private static final String TAG = "com.example.ldurazo.xboxplayerexcercise.activities.searchactivity";
     private ProgressDialog mDialog;
     private EditText mSearchEditText;
@@ -143,7 +143,7 @@ public class SearchActivity extends BaseActivity implements OnSearchTaskCallback
                 builder.show();
                 break;
             case AppSession.FLAG_TOKEN_EXPIRED:
-                new TokenObtainableAsyncTask(new OnTokenTaskCallback() {
+                new TokenObtainableAsyncTask(new TokenTaskCallback() {
                     @Override
                     public void onTokenReceived(String response) {
                         AppSession.getInstance().setAccessToken(response);
@@ -160,7 +160,7 @@ public class SearchActivity extends BaseActivity implements OnSearchTaskCallback
                                     }
                                 });
                     }
-                });
+                }).execute();
                 break;
         }
     }

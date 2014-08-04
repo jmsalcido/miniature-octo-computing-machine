@@ -4,8 +4,8 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.example.ldurazo.xboxplayerexcercise.applications.AppSession;
-import com.example.ldurazo.xboxplayerexcercise.utils.Constants;
 import com.example.ldurazo.xboxplayerexcercise.models.Track;
+import com.example.ldurazo.xboxplayerexcercise.utils.Constants;
 
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
@@ -16,7 +16,6 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -26,32 +25,30 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.util.ArrayList;
 import java.util.zip.GZIPInputStream;
 
-public class SearchAsyncTask extends AsyncTask<Void, Void, ArrayList<Track>> {
-    private static final String TAG = "com.example.ldurazo.xboxplayerexcercise.asynctasks";
-    private String token;
-    private String searchQuery;
-    private String searchType;
-    private SearchTaskCallback callback;
-    private int searchFlag = AppSession.FLAG_DEFAULT;
+public class StreamAsyncTask extends AsyncTask<Void, Void, String> {
 
-    public SearchAsyncTask(String token, String searchQuery, String searchType, SearchTaskCallback callback) {
-        try {
-            token = URLEncoder.encode(token, "UTF-8");
-            this.token = token;
-            this.callback = callback;
-            this.searchQuery=searchQuery;
-            this.searchType =searchType;
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
+    private static final String TAG = "ldurazo.xboxplayerexcercise.asynctasks.stream";
+    private Track track;
+    private StreamCallback callback;
+
+    public StreamAsyncTask(Track track, StreamCallback callback){
+        this.track = track;
+        this.callback = callback;
     }
 
     @Override
-    protected ArrayList<Track> doInBackground(Void... voids) {
+    protected void onPostExecute(String streamURL) {
+        super.onPostExecute(streamURL);
+        callback.onStreamReceived(streamURL);
+        Log.w(TAG, streamURL);
+    }
+
+    @Override
+    protected String doInBackground(Void... voids) {
         try {
+
             StringBuilder stringBuilder = new StringBuilder();
             // Calls the search flow to receive the json string
             InputStream inputStream = establishConnection();
@@ -64,10 +61,12 @@ public class SearchAsyncTask extends AsyncTask<Void, Void, ArrayList<Track>> {
                 }
                 return retrieveSearchResults(stringBuilder.toString());
             }
-        } catch (IOException e) {
+        }catch (UnsupportedEncodingException e){
+            e.printStackTrace();
+        }catch (IOException e){
             e.printStackTrace();
         }
-        return Constants.EMPTY_LIST;
+        return null;
     }
 
     private InputStream establishConnection(){
@@ -78,8 +77,12 @@ public class SearchAsyncTask extends AsyncTask<Void, Void, ArrayList<Track>> {
             HttpConnectionParams.setSoTimeout(httpParameters, timeoutSocket);
             HttpConnectionParams.setConnectionTimeout(httpParameters, timeoutConnection);
             HttpClient client = new DefaultHttpClient(httpParameters);
-            String query = AppSession.SCOPE_SERVICE+"/1/content/music/search?q="+searchQuery+"&accessToken=Bearer+"+token;
-            Log.w(TAG,query);
+            String query = AppSession.SCOPE_SERVICE
+                    + "/1/content/"+track.getId()+"/preview"
+                    + "?clientInstanceId=fa624b17-412c-454a-a5a5-950bb06ae019"
+                    + "&accessToken=Bearer+"
+                    + URLEncoder.encode(AppSession.getInstance().getAccessToken(), "UTF-8");
+            Log.w(TAG, query);
             HttpGet request = new HttpGet(query);
             request.setHeader("Accept", "application/json");
             request.setHeader("Content-type", "application/json");
@@ -98,45 +101,23 @@ public class SearchAsyncTask extends AsyncTask<Void, Void, ArrayList<Track>> {
         return null;
     }
 
-    private ArrayList<Track> retrieveSearchResults(String jsonString){
+    private String retrieveSearchResults(String jsonString){
         try {
-            ArrayList<Track> resultList= new ArrayList();
             JSONObject parentData = new JSONObject(jsonString);
             if(!parentData.isNull("Error")){
                 String errorCode = parentData.getJSONObject("Error").getString("ErrorCode");
                 Log.w(TAG, errorCode);
                 if(errorCode.equals("ACCESS_TOKEN_EXPIRED")){
-                    searchFlag=AppSession.FLAG_TOKEN_EXPIRED;
-                    Log.w(TAG, String.valueOf(searchFlag));
+                    Log.w(TAG, Constants.ERROR+" - "+String.valueOf(AppSession.FLAG_TOKEN_EXPIRED));
                 }if(errorCode.equals("CATALOG_NO_RESULT")){
-                    searchFlag=AppSession.FLAG_NO_RESULT;
-                    Log.w(TAG, String.valueOf(searchFlag));
+                    Log.w(TAG, Constants.ERROR+" - "+String.valueOf(AppSession.FLAG_TOKEN_EXPIRED));
                 }
             }else{
-                JSONObject searchTypeObject = parentData.getJSONObject(searchType);
-                JSONArray searchResults = searchTypeObject.getJSONArray("Items");
-                JSONObject searchObject;
-                Track track;
-                for (int i=0; i<searchResults.length();i++){
-                    searchObject = searchResults.getJSONObject(i);
-                    track = new Track(searchObject.getString("Id"),
-                            searchObject.getString("Name"),
-                            searchObject.getString("ImageUrl"),
-                            searchType);
-                    resultList.add(track);
-                }
-                return resultList;
+                return parentData.getString("Url");
             }
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        return Constants.EMPTY_LIST;
-    }
-
-
-    @Override
-    protected void onPostExecute(ArrayList<Track> list) {
-        callback.onSearchCompleted(list, searchFlag);
-        super.onPostExecute(list);
+        return null;
     }
 }

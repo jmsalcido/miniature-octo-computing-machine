@@ -8,7 +8,6 @@ import com.android.volley.RequestQueue;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.Volley;
 import com.example.ldurazo.xboxplayerexcercise.R;
-import com.example.ldurazo.xboxplayerexcercise.models.AppSession;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
