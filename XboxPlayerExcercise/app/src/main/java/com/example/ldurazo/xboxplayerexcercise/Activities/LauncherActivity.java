@@ -76,7 +76,6 @@ public class LauncherActivity extends BaseActivity implements TokenTaskCallback 
         if (dialog.isShowing()) {
             dialog.dismiss();
         }
-        AppSession.getInstance().setAccessToken(response);
         AppSession.getInstance().setTokenExpireTime(System.currentTimeMillis() + (1000 * 60 * 9));
         Intent tokenRefreshIntent = new Intent(this, TokenRefreshBroadcastReceiver.class);
         tokenRefreshPendingIntent = PendingIntent.getBroadcast

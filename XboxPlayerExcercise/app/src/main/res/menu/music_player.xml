@@ -1,8 +1,4 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.example.ldurazo.xboxplayerexcercise.activities.MusicPlayer" >
-    <item android:id="@+id/stop_song"
-        android:title="Stop"
-        android:icon="@android:drawable/ic_media_pause"
-        android:showAsAction="collapseActionView|ifRoom"/>
 </menu>

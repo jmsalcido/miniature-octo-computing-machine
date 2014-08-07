@@ -1,5 +1,8 @@
 package com.example.ldurazo.xboxplayerexcercise.applications;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+
 /**
  * Created by ldurazo on 7/24/2014 and 2:12 PM.
  */
@@ -46,6 +49,13 @@ public class AppSession {
     }
 
     public String getAccessToken() {
+        if (accessToken != null) {
+            try {
+                return URLEncoder.encode(accessToken, "UTF-8");
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+        }
         return accessToken;
     }
 

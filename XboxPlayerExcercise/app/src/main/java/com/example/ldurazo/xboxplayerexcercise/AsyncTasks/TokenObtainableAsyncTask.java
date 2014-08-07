@@ -3,8 +3,8 @@ package com.example.ldurazo.xboxplayerexcercise.asynctasks;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.example.ldurazo.xboxplayerexcercise.utils.Constants;
 import com.example.ldurazo.xboxplayerexcercise.applications.AppSession;
+import com.example.ldurazo.xboxplayerexcercise.utils.Constants;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -39,6 +39,7 @@ public class TokenObtainableAsyncTask extends AsyncTask<Void, Void, String>{
     @Override
     protected void onPostExecute(String result) {
         super.onPostExecute(result);
+        AppSession.getInstance().setAccessToken(result);
         if(!result.equals(Constants.ERROR)){
             callbacks.onTokenReceived(result);
         }else{

@@ -24,7 +24,7 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:text="Shakira"
+        android:text="Dream theater"
         android:hint="Search..."
         android:background="@drawable/text_fields" />
 
@@ -70,10 +70,6 @@
         android:layout_height="match_parent"
         android:id="@+id/listView"
         style="@style/AppTheme"
-        android:background="#ff000000"
-        android:divider="@android:drawable/divider_horizontal_dark"
-        android:dividerHeight="@dimen/activity_vertical_margin"
-        android:padding="20dp"
         android:drawSelectorOnTop="false"
         android:layout_below="@+id/radioGroup"
         android:layout_alignParentLeft="true"

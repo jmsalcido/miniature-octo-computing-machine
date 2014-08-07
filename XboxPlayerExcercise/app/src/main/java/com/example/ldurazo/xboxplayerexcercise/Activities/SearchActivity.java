@@ -100,7 +100,7 @@ public class SearchActivity extends BaseActivity implements SearchTaskCallback {
             searchType = getSearchType();
             // this is hardcoded expired access token for testing purposes, use it instead of AppSession.getInstance().getAccessToken()
             // http%253a%252f%252fschemas.xmlsoap.org%252fws%252f2005%252f05%252fidentity%252fclaims%252fnameidentifier%3Dmusicplayer_internship_ldurazo%26http%253a%252f%252fschemas.microsoft.com%252faccesscontrolservice%252f2010%252f07%252fclaims%252fidentityprovider%3Dhttps%253a%252f%252fdatamarket.accesscontrol.windows.net%252f%26Audience%3Dhttp%253a%252f%252fmusic.xboxlive.com%26ExpiresOn%3D1406831538%26Issuer%3Dhttps%253a%252f%252fdatamarket.accesscontrol.windows.net%252f%26HMACSHA256%3DIbUBiV9cxaxmORMnCU38%252b1jiJlDV2fUHLOX0CF6rDGo%253d
-            mSearchAsyncTask = new SearchAsyncTask(AppSession.getInstance().getAccessToken(), search_query, searchType, this);
+            mSearchAsyncTask = new SearchAsyncTask(search_query, searchType, this);
             mSearchAsyncTask.execute();
         } else {
             hideDialog();

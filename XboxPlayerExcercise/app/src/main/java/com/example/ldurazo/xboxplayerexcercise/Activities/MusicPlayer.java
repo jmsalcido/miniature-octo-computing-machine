@@ -11,29 +11,32 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.MediaController.MediaPlayerControl;
+import android.widget.TextView;
 
 import com.example.ldurazo.xboxplayerexcercise.R;
 import com.example.ldurazo.xboxplayerexcercise.adapters.DataWrapper;
 import com.example.ldurazo.xboxplayerexcercise.controllers.MusicController;
 import com.example.ldurazo.xboxplayerexcercise.controllers.MusicService;
 import com.example.ldurazo.xboxplayerexcercise.controllers.MusicService.MusicBinder;
+import com.example.ldurazo.xboxplayerexcercise.controllers.ServiceChanges;
 import com.example.ldurazo.xboxplayerexcercise.models.Track;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
 
-public class MusicPlayer extends BaseActivity implements MediaPlayerControl{
+public class MusicPlayer extends BaseActivity implements MediaPlayerControl, ServiceChanges{
 
     private static final String TAG="com.example.ldurazo.xboxplayerexcercise.activities.musicplayer";
     private ArrayList<Track> mTrackList;
     private ImageView mPlayerImageView;
     public static final String TRACK_LIST="TrackList";
     public static final String FIRST_TRACK="FirstTrack";
-    private int currentTrack;
+    private int mCurrentTrack;
     private ImageLoader mImageLoader;
+    private TextView mNowPlayingTextView;
 
     // region Player Service
-    //Player service variables
+    // Player service variables
     private MusicService musicSrv;
     private Intent playIntent;
     private boolean musicBound=false;
@@ -44,9 +47,9 @@ public class MusicPlayer extends BaseActivity implements MediaPlayerControl{
         public void onServiceConnected(ComponentName name, IBinder service) {
             MusicBinder binder = (MusicBinder) service;
             //get service
-            musicSrv = binder.getService();
+            musicSrv = binder.getService(MusicPlayer.this);
             //pass list
-            musicSrv.initTrack(mTrackList, currentTrack);
+            musicSrv.initTrack(mTrackList, mCurrentTrack);
             musicSrv.playSong();
             musicBound = true;
         }
@@ -65,28 +68,22 @@ public class MusicPlayer extends BaseActivity implements MediaPlayerControl{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_music_player);
+        if(playIntent==null){
+            playIntent = new Intent(this, MusicService.class);
+        }
+        startService(playIntent);
+        bindService(playIntent, musicConnection, Context.BIND_AUTO_CREATE);
         initUI();
         initVars();
+        setController();
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        if(playIntent==null){
-            playIntent = new Intent(this, MusicService.class);
-            bindService(playIntent, musicConnection, Context.BIND_AUTO_CREATE);
-            startService(playIntent);
-        }
     }
 
-    @Override
-    public void onWindowFocusChanged(boolean hasFocus) {
-        super.onWindowFocusChanged(hasFocus);
-        displayImage();
-        setController();
-    }
-
-    private void displayImage(){
+    private void displayImageAndTextfield(int currentTrack){
         int imageWidth = mPlayerImageView.getWidth();
         int imageHeight = mPlayerImageView.getHeight();
         mImageLoader.displayImage(mTrackList.get(
@@ -94,17 +91,20 @@ public class MusicPlayer extends BaseActivity implements MediaPlayerControl{
                 +"&w="+ imageWidth
                 +"&h="+ imageHeight
                 ,mPlayerImageView);
+        mNowPlayingTextView.setText("Now playing: "+mTrackList.get(currentTrack).getName());
+
     }
 
     @Override
     protected void initUI() {
         mPlayerImageView = (ImageView) findViewById(R.id.PlayerImageView);
+        mNowPlayingTextView = (TextView) findViewById(R.id.now_playing_text_view);
     }
 
     @Override
     protected void initVars() {
         mImageLoader = ImageLoader.getInstance();
-        currentTrack = getIntent().getIntExtra(MusicPlayer.FIRST_TRACK, 0);
+        mCurrentTrack = getIntent().getIntExtra(MusicPlayer.FIRST_TRACK, 0);
         DataWrapper dw = (DataWrapper) getIntent().getSerializableExtra(TRACK_LIST);
         mTrackList= dw.getTracks();
     }
@@ -112,6 +112,7 @@ public class MusicPlayer extends BaseActivity implements MediaPlayerControl{
 
     //endregion
 
+    //region Menu
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -126,15 +127,29 @@ public class MusicPlayer extends BaseActivity implements MediaPlayerControl{
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         switch (id) {
-            case R.id.stop_song:
-                stopService(playIntent);
-                musicSrv=null;
-                break;
+            default://TODO
+            break;
         }
         return super.onOptionsItemSelected(item);
     }
+    //endregion
+
+
+    @Override
+    public void onNewSongPlayed(int songPosition) {
+        controller.show();
+        mCurrentTrack=songPosition;
+        displayImageAndTextfield(songPosition);
+    }
 
     private MusicController controller;
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unbindService(musicConnection);
+        stopService(playIntent);
+    }
 
     private void setController(){
         controller = new MusicController(MusicPlayer.this);
@@ -150,6 +165,7 @@ public class MusicPlayer extends BaseActivity implements MediaPlayerControl{
                 playPrev();
             }
         });
+        controller.setActivated(true);
         controller.setMediaPlayer(this);
         controller.setEnabled(true);
     }
@@ -157,16 +173,14 @@ public class MusicPlayer extends BaseActivity implements MediaPlayerControl{
     //play next
     private void playNext(){
         musicSrv.playNext();
-        controller.show(0);
     }
 
     //play previous
     private void playPrev(){
         musicSrv.playPrev();
-        controller.show(0);
     }
 
-//region Media Controllar
+//region Media Controller
     @Override
     public void start() {
         musicSrv.go();

@@ -4,8 +4,8 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.example.ldurazo.xboxplayerexcercise.applications.AppSession;
-import com.example.ldurazo.xboxplayerexcercise.utils.Constants;
 import com.example.ldurazo.xboxplayerexcercise.models.Track;
+import com.example.ldurazo.xboxplayerexcercise.utils.Constants;
 
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
@@ -24,29 +24,20 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.zip.GZIPInputStream;
 
 public class SearchAsyncTask extends AsyncTask<Void, Void, ArrayList<Track>> {
     private static final String TAG = "com.example.ldurazo.xboxplayerexcercise.asynctasks";
-    private String token;
     private String searchQuery;
     private String searchType;
     private SearchTaskCallback callback;
     private int searchFlag = AppSession.FLAG_DEFAULT;
 
-    public SearchAsyncTask(String token, String searchQuery, String searchType, SearchTaskCallback callback) {
-        try {
-            token = URLEncoder.encode(token, "UTF-8");
-            this.token = token;
+    public SearchAsyncTask(String searchQuery, String searchType, SearchTaskCallback callback) {
             this.callback = callback;
             this.searchQuery=searchQuery;
             this.searchType =searchType;
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
     }
 
     @Override
@@ -78,11 +69,15 @@ public class SearchAsyncTask extends AsyncTask<Void, Void, ArrayList<Track>> {
             HttpConnectionParams.setSoTimeout(httpParameters, timeoutSocket);
             HttpConnectionParams.setConnectionTimeout(httpParameters, timeoutConnection);
             HttpClient client = new DefaultHttpClient(httpParameters);
-            String query = AppSession.SCOPE_SERVICE+"/1/content/music/search?q="+searchQuery+"&accessToken=Bearer+"+token;
+            String query = AppSession.SCOPE_SERVICE
+                    +"/1/content/music/search?q="
+                    +searchQuery
+                    +"&accessToken=Bearer+"
+                    + AppSession.getInstance().getAccessToken();
             Log.w(TAG,query);
             HttpGet request = new HttpGet(query);
             request.setHeader("Accept", "application/json");
-            request.setHeader("Content-type", "application/json");
+            request.setHeader("Content-Type", "application/json");
             HttpResponse response = client.execute(request);
             HttpEntity entity = response.getEntity();
             Header contentEncoding = response.getFirstHeader("Content-Encoding");
