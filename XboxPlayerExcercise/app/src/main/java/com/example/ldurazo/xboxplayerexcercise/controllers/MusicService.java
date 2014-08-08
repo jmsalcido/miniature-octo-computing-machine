@@ -16,7 +16,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.StringRequest;
-import com.example.ldurazo.xboxplayerexcercise.activities.MusicPlayer;
+import com.example.ldurazo.xboxplayerexcercise.activities.MusicPlayerActivity;
 import com.example.ldurazo.xboxplayerexcercise.applications.AppSession;
 import com.example.ldurazo.xboxplayerexcercise.applications.BaseApp;
 import com.example.ldurazo.xboxplayerexcercise.models.Track;
@@ -115,7 +115,7 @@ public class MusicService extends Service implements
     public void onPrepared(MediaPlayer mediaPlayer) {
         mediaPlayer.start();
         //TODO navigation to go back to the player
-        Intent notIntent = new Intent(this, MusicPlayer.class);
+        Intent notIntent = new Intent(this, MusicPlayerActivity.class);
         notIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent pendInt = PendingIntent.getActivity(this, 0,
                 notIntent, PendingIntent.FLAG_CANCEL_CURRENT);

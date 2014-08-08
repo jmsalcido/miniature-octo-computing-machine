@@ -31,7 +31,7 @@
             android:windowSoftInputMode="stateHidden" >
         </activity>
         <activity
-            android:name=".activities.MusicPlayer"
+            android:name=".activities.MusicPlayerActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:label="@string/title_activity_music_player" >

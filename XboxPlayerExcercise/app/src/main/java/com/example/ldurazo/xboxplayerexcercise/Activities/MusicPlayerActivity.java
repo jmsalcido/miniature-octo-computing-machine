@@ -6,16 +6,23 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.support.v4.widget.DrawerLayout;
+import android.util.Log;
+import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.AnimationUtils;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.MediaController;
 import android.widget.MediaController.MediaPlayerControl;
 import android.widget.TextView;
 
 import com.example.ldurazo.xboxplayerexcercise.R;
 import com.example.ldurazo.xboxplayerexcercise.adapters.DataWrapper;
-import com.example.ldurazo.xboxplayerexcercise.controllers.MusicController;
+import com.example.ldurazo.xboxplayerexcercise.adapters.SearchAdapter;
 import com.example.ldurazo.xboxplayerexcercise.controllers.MusicService;
 import com.example.ldurazo.xboxplayerexcercise.controllers.MusicService.MusicBinder;
 import com.example.ldurazo.xboxplayerexcercise.controllers.ServiceChanges;
@@ -24,7 +31,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
 
-public class MusicPlayer extends BaseActivity implements MediaPlayerControl, ServiceChanges{
+public class MusicPlayerActivity extends BaseActivity implements MediaPlayerControl, ServiceChanges, DrawerLayout.DrawerListener{
 
     private static final String TAG="com.example.ldurazo.xboxplayerexcercise.activities.musicplayer";
     private ArrayList<Track> mTrackList;
@@ -34,7 +41,7 @@ public class MusicPlayer extends BaseActivity implements MediaPlayerControl, Ser
     private int mCurrentTrack;
     private ImageLoader mImageLoader;
     private TextView mNowPlayingTextView;
-
+    private static MediaController controller;
     // region Player Service
     // Player service variables
     private MusicService musicSrv;
@@ -47,7 +54,7 @@ public class MusicPlayer extends BaseActivity implements MediaPlayerControl, Ser
         public void onServiceConnected(ComponentName name, IBinder service) {
             MusicBinder binder = (MusicBinder) service;
             //get service
-            musicSrv = binder.getService(MusicPlayer.this);
+            musicSrv = binder.getService(MusicPlayerActivity.this);
             //pass list
             musicSrv.initTrack(mTrackList, mCurrentTrack);
             musicSrv.playSong();
@@ -67,7 +74,12 @@ public class MusicPlayer extends BaseActivity implements MediaPlayerControl, Ser
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_music_player);
+        FrameLayout frameLayout = (FrameLayout)findViewById(R.id.content_frame);
+        // inflate the custom activity layout
+        LayoutInflater layoutInflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View activityView = layoutInflater.inflate(R.layout.activity_music_player, null,false);
+        // add the custom layout of this activity to frame layout.
+        frameLayout.addView(activityView);
         if(playIntent==null){
             playIntent = new Intent(this, MusicService.class);
         }
@@ -76,11 +88,6 @@ public class MusicPlayer extends BaseActivity implements MediaPlayerControl, Ser
         initUI();
         initVars();
         setController();
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
     }
 
     private void displayImageAndTextfield(int currentTrack){
@@ -92,21 +99,30 @@ public class MusicPlayer extends BaseActivity implements MediaPlayerControl, Ser
                 +"&h="+ imageHeight
                 ,mPlayerImageView);
         mNowPlayingTextView.setText("Now playing: "+mTrackList.get(currentTrack).getName());
-
+        mNowPlayingTextView.startAnimation(AnimationUtils.loadAnimation(MusicPlayerActivity.this, R.anim.abc_fade_in));
     }
 
     @Override
     protected void initUI() {
         mPlayerImageView = (ImageView) findViewById(R.id.PlayerImageView);
         mNowPlayingTextView = (TextView) findViewById(R.id.now_playing_text_view);
+        mDrawerLayout.setDrawerListener(this);
+        mPlayerImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(!controller.isShowing())
+                    controller.show();
+            }
+        });
     }
 
     @Override
     protected void initVars() {
         mImageLoader = ImageLoader.getInstance();
-        mCurrentTrack = getIntent().getIntExtra(MusicPlayer.FIRST_TRACK, 0);
+        mCurrentTrack = getIntent().getIntExtra(MusicPlayerActivity.FIRST_TRACK, 0);
         DataWrapper dw = (DataWrapper) getIntent().getSerializableExtra(TRACK_LIST);
         mTrackList= dw.getTracks();
+        mDrawerList.setAdapter(new SearchAdapter(MusicPlayerActivity.this, mTrackList));
     }
 
 
@@ -116,12 +132,15 @@ public class MusicPlayer extends BaseActivity implements MediaPlayerControl, Ser
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.music_player, menu);
+        getMenuInflater().inflate(R.menu.menu, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        if(mDrawerToggle.onOptionsItemSelected(item)){
+            return true;
+        }
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
@@ -137,22 +156,22 @@ public class MusicPlayer extends BaseActivity implements MediaPlayerControl, Ser
 
     @Override
     public void onNewSongPlayed(int songPosition) {
-        controller.show();
         mCurrentTrack=songPosition;
         displayImageAndTextfield(songPosition);
     }
 
-    private MusicController controller;
+
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
+        controller = null;
         unbindService(musicConnection);
         stopService(playIntent);
+        super.onDestroy();
     }
 
     private void setController(){
-        controller = new MusicController(MusicPlayer.this);
+        controller = new MediaController(MusicPlayerActivity.this);
         controller.setAnchorView(mPlayerImageView);
         controller.setPrevNextListeners(new View.OnClickListener() {
             @Override
@@ -165,7 +184,6 @@ public class MusicPlayer extends BaseActivity implements MediaPlayerControl, Ser
                 playPrev();
             }
         });
-        controller.setActivated(true);
         controller.setMediaPlayer(this);
         controller.setEnabled(true);
     }
@@ -173,6 +191,8 @@ public class MusicPlayer extends BaseActivity implements MediaPlayerControl, Ser
     //play next
     private void playNext(){
         musicSrv.playNext();
+        mDrawerLayout.openDrawer(findViewById(R.id.drawer));
+        mDrawerLayout.closeDrawers();
     }
 
     //play previous
@@ -240,6 +260,40 @@ public class MusicPlayer extends BaseActivity implements MediaPlayerControl, Ser
     @Override
     public int getAudioSessionId() {
         return 0;
+    }
+
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if(keyCode==KeyEvent.KEYCODE_BACK){
+            startActivity(new Intent().setAction(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_HOME));
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+    //endregion
+
+    //region Drawer Listener
+    @Override
+    public void onDrawerSlide(View drawerView, float slideOffset) {
+        //Do nothing
+    }
+
+    @Override
+    public void onDrawerOpened(View drawerView) {
+        Log.w(TAG, "Drawer Opened");
+        controller.hide();
+    }
+
+    @Override
+    public void onDrawerClosed(View drawerView) {
+        Log.w(TAG, "Drawer closed");
+        setController();
+        controller.show();
+    }
+
+    @Override
+    public void onDrawerStateChanged(int newState) {
     }
 
     //endregion

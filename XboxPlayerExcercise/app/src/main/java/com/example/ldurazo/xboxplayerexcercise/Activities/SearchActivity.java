@@ -61,6 +61,7 @@ public class SearchActivity extends BaseActivity implements SearchTaskCallback {
     protected void initUI() {
         mSearchEditText = (EditText) findViewById(R.id.editText);
         mSearchEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            //this is for the keyboard to search when pressing "enter"
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
@@ -76,9 +77,9 @@ public class SearchActivity extends BaseActivity implements SearchTaskCallback {
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Intent playerIntent = new Intent(SearchActivity.this, MusicPlayer.class);
-                playerIntent.putExtra(MusicPlayer.TRACK_LIST, new DataWrapper(mTrackList));
-                playerIntent.putExtra(MusicPlayer.FIRST_TRACK, i);
+                Intent playerIntent = new Intent(SearchActivity.this, MusicPlayerActivity.class);
+                playerIntent.putExtra(MusicPlayerActivity.TRACK_LIST, new DataWrapper(mTrackList));
+                playerIntent.putExtra(MusicPlayerActivity.FIRST_TRACK, i);
                 startActivity(playerIntent);
             }
         });
