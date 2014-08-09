@@ -24,13 +24,6 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activities.SearchActivity"
-            android:configChanges="orientation|screenSize"
-            android:inputType="textNoSuggestions"
-            android:label="@string/title_activity_player"
-            android:windowSoftInputMode="stateHidden" >
-        </activity>
-        <activity
             android:name=".activities.MusicPlayerActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"

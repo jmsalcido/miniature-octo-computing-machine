@@ -3,9 +3,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.example.ldurazo.xboxplayerexcercise.activities.MyActivity" >
 
-    <item android:id="@+id/search_action"
+    <item android:id="@+id/player_search_action"
         android:title="Search"
         android:icon="@drawable/search_icon"
-        xboxplayer:showAsAction="always"/>
+        android:imeOptions="actionSearch"
+        xboxplayer:showAsAction="always"
+        xboxplayer:actionViewClass="android.widget.SearchView"/>
 
 </menu>
